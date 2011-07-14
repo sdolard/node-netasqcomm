@@ -22,15 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 
 Version 1.0b
 
+
 This is a NETASQ security appliance Command Line Interface based on node.js
 	http://www.netasq.com
 	http://nodejs.org
 
+	
 This depends on nodejs sax-js lib.
 	You can found it with npm (Node Package Manager) or here: https://github.com/isaacs/sax-js
 	If you get it from git hub, put it in contrib directory like this from a promp in N2CLI directory:
 		cd contrib
 		git clone git://github.com/isaacs/sax-js.git
+	
 		
 Usage:
 	run
@@ -38,6 +41,7 @@ Usage:
 	quit
 		just type "q" or [CTRL] + C
 
+		
 Known issues:
   - shell arguments (Ex: to login, verbose) are not yet supported
   - limited to NETASQ V9+ firmware (https only on port 443, SRP is not supported)
@@ -46,3 +50,6 @@ Known issues:
   - You can not use it to script your appliances
   - this is not available through npm
   - your appliance should directly be available on https://<address>
+  
+  
+Tested with node.js v0.4.9.
