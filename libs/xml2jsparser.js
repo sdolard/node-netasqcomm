@@ -19,11 +19,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 */
-
 var
-sax = require("../contrib/sax-js/lib/sax"), // https://github.com/isaacs/sax-js
+sax, // https://github.com/isaacs/sax-js
 util = require('util');
 
+try{
+	sax = require('sax'); // npm ?
+}
+catch(e) {
+	sax = require('../contrib/sax-js/lib/sax');	// contrib ?
+}
 
 /**
 * Based on sax-js.
@@ -58,7 +63,7 @@ var XML2JSParser = function () {
 	
 	
 	parser.onerror = function (e) {
-		console.log('parser.onerror e:', e);
+		// console.log('parser.onerror e:', e);
 		if (me.onerror !== undefined) { 
 			me.onerror(e);
 		}
@@ -129,10 +134,10 @@ var XML2JSParser = function () {
 		
 	};
 	
-	parser.onopencdata =  function(data) {// opencdata - The opening tag of a <![CDATA[ block.
+	parser.onopencdata =  function(data) {
 		responseDataStack[responseDataStack.length - 1].cdata = '';
 	};
-	parser.oncdata =  function(data) {// cdata - The text of a <![CDATA[ block. Since <![CDATA[ blocks can get quite large, this event may fire multiple times for a single block, if it is broken up into multiple write()s. Argument: the string of random character data.
+	parser.oncdata =  function(data) {
 		responseDataStack[responseDataStack.length - 1].cdata += data;
 	};
 	
@@ -170,4 +175,37 @@ exports.createXML2JSParser = function() {
 };
 
 
-
+(function test_XML2JSParser(){
+		var xml2jsparser = exports.createXML2JSParser();
+		
+		
+		xml2jsparser.onerror = function (e) {
+			if (e.message.indexOf('Unexpected end', 0) !== 0){
+				throw "test_XML2JSParser: e.message.indexOf('Unexpected end', 0) !== 0";
+			}
+		};
+		xml2jsparser.close();
+		
+		// raw test
+		/*xml2jsparser.ondone = function (data) {
+			
+			console.log('test_XML2JSParser xml2jsparser.ondone:', util.inspect(data, false, 100));
+		};
+		var raw = [
+			'<?xml version="1.0"?>',
+			'<nws code="100" msg="OK" id="DEFAULT_STARTUP_COMMAND">',
+			'<serverd ret="101" code="00a01000" msg="Début">',
+			'<data format="raw">',
+			'<![CDATA[AUTH       : User authentication',
+			"CHPWD      : Return if it's necessary to update password or not'",
+			']]>',
+			'</data>',
+			'</serverd>',
+			'<serverd ret="100" code="00a00100" msg="Ok">',
+			'</serverd>',
+			'</nws>'
+		].join('');
+		xml2jsparser.write(raw);
+		xml2jsparser.close();
+	*/
+})();
