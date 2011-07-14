@@ -22,19 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 
 Version 1.0b
 
-This is a NETASQ security appliance Command Line Interface base on node.js
+This is a NETASQ security appliance Command Line Interface based on node.js
 	http://www.netasq.com
 	http://nodejs.org
 
 This depends on nodejs sax-js lib.
 	You can found it with npm (Node Package Manager) or here: https://github.com/isaacs/sax-js
-
+	If you get it from git hub, put it in contrib directory like this from a promp in N2CLI directory:
+		cd contrib
+		git clone git://github.com/isaacs/sax-js.git
+		
 Usage:
 	node n2cli.js
 
 Known issues:
-  - limited to V9+ firmware
+  - limited to NETASQ V9+ firmware
   - file transfert (download/upload) is not supported
   - there is no command line history
   - You can not use it to script your appliances
-  - this is not available for now through npm
+  - this is not available through npm

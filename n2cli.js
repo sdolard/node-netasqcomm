@@ -261,12 +261,14 @@ function auth() {
 }
 
 function dumpServerdDataFormatSection(section) {
+	
 	if (section.title) {
 		console.log('[%s]', section.title);
 	}
 	
 	if (section.key instanceof Array) {
-		for (i in section.key) {
+		var i;
+		for (i = 0; i < section.key.length; i++) {
 			console.log('%s=%s', section.key[i].name, section.key[i].value);
 		}
 	} else {
@@ -399,8 +401,8 @@ function runCommand(cmd){
 				parser.ondone = function (json) {
 					// Todo, enable in verbose mode?
 					//console.log('parser.onend json:', util.inspect(json, false, 100));
-					switch(u.getObjectValue('nws.code', json)) {
-					case '100':
+					if (u.getObjectValue('nws.code', json) === '100') {
+						
 						var serverd = u.getObjectValue('nws.serverd', json);
 						if (serverd instanceof Array) {
 							var i;
@@ -410,9 +412,7 @@ function runCommand(cmd){
 						} else {
 							manageServerdResponse(serverd);
 						}
-						break;
-						
-					default:
+					} else {
 						console.log(u.getObjectValue('nws.msg', json));
 						setPrompt(PSTATE_CLI);
 					}

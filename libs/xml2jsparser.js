@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 */
 
 var
-sax = require("../sax-js/lib/sax"), // https://github.com/isaacs/sax-js
+sax = require("../contrib/sax-js/lib/sax"), // https://github.com/isaacs/sax-js
 util = require('util');
 
 
