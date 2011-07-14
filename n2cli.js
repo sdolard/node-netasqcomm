@@ -26,11 +26,11 @@ var
 */
 util = require('util'),
 https = require('https'),
-xml2jsparser = require('./common/xml2jsparser'),
-prompt = require('./common/prompt').prompt,
-b64 = require('./common/b64'),
-u = require('./common/utils'),
-netasq_session = require('./common/netasq_session'),
+xml2jsparser = require('./libs/xml2jsparser'),
+prompt = require('./libs/prompt').prompt,
+b64 = require('./libs/b64'),
+u = require('./libs/utils'),
+netasq_session = require('./libs/netasq_session'),
 
 
 /**
