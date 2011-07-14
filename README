@@ -33,11 +33,16 @@ This depends on nodejs sax-js lib.
 		git clone git://github.com/isaacs/sax-js.git
 		
 Usage:
-	node n2cli.js
+	run
+		node n2cli.js
+	quit
+		just type "q" or [CTRL] + C
 
 Known issues:
-  - limited to NETASQ V9+ firmware
+  - shell arguments (Ex: to login, verbose) are not yet supported
+  - limited to NETASQ V9+ firmware (https only on port 443, SRP is not supported)
   - file transfert (download/upload) is not supported
   - there is no command line history
   - You can not use it to script your appliances
   - this is not available through npm
+  - your appliance should directly be available on https://<address>

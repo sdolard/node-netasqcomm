@@ -25,7 +25,7 @@ util = require('util'),
 b64_keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
 /**
-* Adapated from
+* Adapted from
 * Base64 encode / decode
 * http://www.webtoolkit.info/
 * http://www.webtoolkit.info/licence
@@ -106,7 +106,6 @@ exports.decode = function (input) {
 	output = b64_utf8_decode(output);
 	
 	return output;
-	
 };
 
 /** 

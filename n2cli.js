@@ -57,8 +57,6 @@ session = netasq_session.createSession();
 //});
 
 
-
-
 /**
 * Login
 */
@@ -73,30 +71,16 @@ function login() {
 		headers: {
 			Cookie: session.cookieToHeaderString()
 		}
-	}, p;
+	};
 	
-	// Adding cookies to request
-	// TODO: add more intelligence > all cookies are served...
-	/*for (p in session.cookies) {
-	if (options.headers.Cookie.length !== 0) {
-	options.headers.Cookie += '; ';
-	}
-	options.headers.Cookie += p;
-	if (session.cookies[p].hasOwnProperty('value')) {
-	options.headers.Cookie += "=" + session.cookies[p].value;
-	}
-	
-	}*/
-	//console.log('options', options);
-	
+
 	postData += 'reqlevel=' + requiredLevel;
 	postData += '&id=login';
 	options.headers['Content-Length'] = postData.length;
 	
-	console.log('Login...\nRequired level: %s', requiredLevel);
+	console.log('Required level: %s\nLogin...', requiredLevel);
 	//console.log("login query:", options);
 	var request = https.request(options, function(response) {
-			
 			// Codec
 			response.setEncoding('utf8');
 			
@@ -157,11 +141,8 @@ function login() {
 * Authentication
 */
 function auth() {
-	
-	// https://10.0.0.254/auth/admin.html?&pswd=cGFyZWlsMTkwOA%3D%3D&uid=YWRtaW4%3D
 	session.login = 'admin';	
 	var
-	//pswd = 'pareil1908',
 	uidB64 = b64.encode(session.login),
 	pswdB64= b64.encode(session.pwd),
 	url= '/auth/admin.html',
@@ -173,15 +154,10 @@ function auth() {
 	
 	//console.log("query:", options);
 	console.log("Connecting to %s as %s...", options.host, session.login);
-	var request = https.request(options, function(response) {
-			
+	var request = https.request(options, function(response) {	
 			// Codec
 			response.setEncoding('utf8');
-			
-			// Log
-			//console.log("response statusCode: ", response.statusCode);
-			//console.log("response headers: ", response.headers);
-			
+		
 			// Parser
 			var parser = undefined;
 			if (response.headers['content-type'] === 'text/xml') {
