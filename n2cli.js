@@ -30,7 +30,7 @@ xml2jsparser = require('./libs/xml2jsparser'),
 prompt = require('./libs/prompt').prompt,
 b64 = require('./libs/b64'),
 u = require('./libs/utils'),
-netasq_session = require('./libs/netasq_session'),
+netasqComm = require('./libs/netasq_comm'),
 
 
 /**
@@ -46,7 +46,7 @@ MAX_PSTATE = i;
 /**
 * Session
 */
-session = netasq_session.createSession();
+session = netasqComm.createSession();
 
 /**
 * Exception management
@@ -73,7 +73,7 @@ function login() {
 		}
 	};
 	
-
+	
 	postData += 'reqlevel=' + requiredLevel;
 	postData += '&id=login';
 	options.headers['Content-Length'] = postData.length;
@@ -157,7 +157,7 @@ function auth() {
 	var request = https.request(options, function(response) {	
 			// Codec
 			response.setEncoding('utf8');
-		
+			
 			// Parser
 			var parser = undefined;
 			if (response.headers['content-type'] === 'text/xml') {
@@ -236,89 +236,46 @@ function auth() {
 	});
 }
 
-function dumpServerdDataFormatSection(section) {
-	
-	if (section.title) {
-		console.log('[%s]', section.title);
-	}
-	
-	if (section.key instanceof Array) {
-		var i;
-		for (i = 0; i < section.key.length; i++) {
-			console.log('%s=%s', section.key[i].name, section.key[i].value);
-		}
-	} else {
-		console.log('%s=%s', section.key.name, section.key.value);
-	}
-}
 
-function manageServerdDataFormat(data) {
-	var i;
-	switch(data.format) {
-	case "section":
-		if (data.section instanceof Array) {
-			for (i in data.section) {
-				if (data.section[i].key === undefined) {
-					continue;
-				}
-				dumpServerdDataFormatSection(data.section[i]);
-				if (i < data.section.length - 1) { 
-					console.log(' ');
-				}
-			}
-		} else {
-			dumpServerdDataFormatSection(data.section);
-		}
-		break;
-		
-	case "section_line":
-		if (data.section.title) {
-			console.log('[%s]', data.section.title);
-		}
-		for (i in data.section.line) {
-			var j, 
-			line = '';
-			for (j in data.section.line[i].key) {
-				if (line.length !== 0) {
-					line += ' ';
-				}
-				line += data.section.line[i].key[j].name + '=' + data.section.line[i].key[j].value;
-			}
-			console.log(line);
-			
-		}
-		break;
-		
-	case "raw":
-		console.log(data.cdata);
-		break;
-	default:
-		console.log('Unmanaged format: %s', data.format);
-		console.log(util.inspect(data, false, 100));		
-	}
-}
 
 function manageServerdResponse(serverd)
-{
-	switch(serverd.ret) {
-	case '103': // Disconnected
+{	
+	switch(Number(serverd.ret)) {
+		// NOT SUPPORTED
+	case netasqComm.SERVERD_OK_SERVER_WAITING_MULTI_LINES: // Success: serverd is waiting for data
+		console.log('NOT SUPPORTED!!!\ncode="%s" msg="%s"', serverd.code, serverd.msg);
+		break;
+		
+		// Disconnected
+	case netasqComm.SERVERD_OK_DISCONNECTED: // Success: Session is closed
+	case netasqComm.SERVERD_KO_AUTH: // Authentication failed
+	case netasqComm.SERVERD_KO_TIMEOUT_DISCONNECTED: // Failure: timout disonnected (no activity)
+	case netasqComm.SERVERD_KO_MAXIMUM_ADMIN_REACH: // Failure: maximum administrator are connected to appliance
 		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
 		break;
 		
-	case '101': // Start 
+		// Multiple lines
+	case netasqComm.SERVERD_OK_MULTI_LINES: // Success multiple lines
+	case netasqComm.SERVERD_WARNING_OK_MULTI_LINE: // Success multiple lines but multiple warning
+	case netasqComm.SERVERD_KO_MULTI_LINES:// Failure multiple line 
 		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
-		manageServerdDataFormat(serverd.data);
+		netasqComm.dumpServerdDataFormat(serverd.data);
 		break;
 		
-	case '200': // Unknown command
-	case '100': // Ok 
-	case '104': // Need reboot 
+		// One line
+	case netasqComm.SERVERD_OK: // Success one line
+	case netasqComm.SERVERD_OK_SERVER_NEED_REBOOT: // Success but appliance should be restarted (in order to apply modifications) 
+	case netasqComm.SERVERD_WARNING_OK: // Success one line but one warning 
+	case netasqComm.SERVERD_KO: // Failure one line
+	case netasqComm.SERVERD_KO_LEVEL: // Administator do not have enought level to run specified command
+	case netasqComm.SERVERD_KO_LICENCE: // Appliance do not have licence option to run specified command
 		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
 		setPrompt(PSTATE_CLI);
 		break;
 		
+		// Others
 	default:
-		console.log(util.inspect(serverd, false, 100));
+		console.log('manageServerdResponse default: ', util.inspect(serverd, false, 100));
 		setPrompt(PSTATE_CLI);
 	}
 }
