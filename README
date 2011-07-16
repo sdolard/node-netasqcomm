@@ -49,7 +49,6 @@ Known issues:
   - there is no command line history
   - You can not use it to script your appliances
   - this is not available through npm
-  - your appliance should directly be available on https://<address>
   
   
 Tested with node.js v0.4.9.

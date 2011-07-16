@@ -93,13 +93,13 @@ function login() {
 					console.log('parser.onerror e:', e);
 				};
 				
-				parser.ondone = function (json) {
+				parser.ondone = function (data) {
 					// Todo, enable in verbose mode?
-					//console.log('parser.onend json:', util.inspect(json, false, 100));
-					session.id = u.getObjectValue('nws.sessionid', json);
-					if (u.getObjectValue('nws.code', json) === '100') {
+					//console.log('parser.onend data:', util.inspect(data, false, 100));
+					session.id = u.getObjectValue('nws.sessionid', data);
+					if (u.getObjectValue('nws.code', data) === '100') {
 						console.log('Logged in.\nSession level: %s', 
-							u.getObjectValue('nws.sessionlevel', json));
+							u.getObjectValue('nws.sessionlevel', data));
 						setPrompt(PSTATE_CLI);
 					} else {
 						console.log('Login failed.\n>');
@@ -163,8 +163,8 @@ function auth() {
 			if (response.headers['content-type'] === 'text/xml') {
 				parser = xml2jsparser.createXML2JSParser();
 				
-				parser.ondone = function (json) {
-					if(json.nws.value === 'ok') {
+				parser.ondone = function (data) {
+					if(data.nws.value === 'ok') {
 						session.authenticated = true;
 						console.log('Authenticated!');
 						//console.log('Authenticated!', session);
@@ -255,7 +255,7 @@ function manageServerdResponse(serverd)
 		break;
 		
 		// Multiple lines
-	case netasqComm.SERVERD_OK_MULTI_LINES: // Success multiple lines
+	case netasqComm.SERVERD_OK_MULTI_LINES: // Success multiple lines (+file download)
 	case netasqComm.SERVERD_WARNING_OK_MULTI_LINE: // Success multiple lines but multiple warning
 	case netasqComm.SERVERD_KO_MULTI_LINES:// Failure multiple line 
 		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
@@ -281,6 +281,102 @@ function manageServerdResponse(serverd)
 }
 
 
+
+
+function downloadfileCommand(fileName, path, size, crc){
+	/*
+	https://10.0.0.254/api/download/U70XXA9M1000019_16_Juil_2011.na?sessionid=IH02c7KChvmP
+	Response header
+	Cache-Control:no-cache, must-revalidate
+	Connection:keep-alive
+	Content-Disposition:attachment; filename="U70XXA9M1000019_16_Juil_2011.na"
+	Content-Encoding:deflate
+	Content-Length:79926
+	Content-Type:application/force-download; name="U70XXA9M1000019_16_Juil_2011.na"
+	Expires:0
+	Pragma:no-cache
+	Transfer-Encoding:chunked
+	*/
+	
+	session.lastCliCmd = cmd;
+	var
+	postData = '',
+	options = {
+		host: session.host,
+		path: 'api/download', // OK
+		method: 'GET',
+		headers: {
+			Cookie: session.cookieToHeaderString()
+		}
+	};
+	
+	
+	//console.log('options', options);
+	//console.log('postData', postData);
+	var request = https.request(options, function(response) {
+			
+			// Codec
+			response.setEncoding('utf8');
+			
+			// Parser
+			var parser = undefined;
+			if (response.headers['content-type'].indexOf('text/xml') !== -1 ) {
+				parser = xml2jsparser.createXML2JSParser();
+				
+				parser.onerror = function (e) {
+					console.log('parser.onerror e:', e);
+				};
+				
+				parser.ondone = function (data) {
+					// Todo, enable in verbose mode?
+					// console.log('parser.onend data:', util.inspect(data, false, 100));
+					if (u.getObjectValue('nws.code', data) === '100') {
+						
+						var serverd = u.getObjectValue('nws.serverd', data);
+						if (serverd instanceof Array) {
+							var i;
+							for (i in serverd) {
+								manageServerdResponse(serverd[i]);
+							}
+						} else {
+							manageServerdResponse(serverd);
+						}
+					} else {
+						console.log(u.getObjectValue('nws.msg', data));
+						setPrompt(PSTATE_CLI);
+					}
+				};
+			}
+			
+			// Response
+			if (response.statusCode !== 200) { // HTTP KO
+				console.log('runCommand statusCode= %d', response.statusCode);
+			}
+			
+			response.on('data', function(chunk) {
+					if (parser) {
+						parser.write(chunk);
+						return;
+					}
+					console.log(chunk);
+			});
+			
+			response.on('end', function(chunk) {
+					if (parser) {
+						parser.close();
+					}
+			});
+			
+	});
+	
+	request.end(postData, 'utf8');
+	
+	request.on('error', function(e) {
+			console.log(e.message);
+	});
+}
+
+
 function runCommand(cmd){
 	// https://10.2.15.251/api/command?sessionid=6OhAqp5e0Ndc&command=help
 	
@@ -292,23 +388,9 @@ function runCommand(cmd){
 		path: '/api/command', // OK
 		method: 'POST',
 		headers: {
-			Cookie: ''
+			Cookie: session.cookieToHeaderString()
 		}
-	}, p;
-	
-	// Adding cookies to request
-	// TODO: add more intelligence > all cookies are served...
-	for (p in session.cookies) {
-		if (options.headers.Cookie.length !== 0) {
-			options.headers.Cookie += '; ';
-		}
-		options.headers.Cookie += p;
-		if (session.cookies[p].hasOwnProperty('value')) {
-			options.headers.Cookie += "=" + session.cookies[p].value;
-		}
-		
-	}
-	//console.log('options', options);
+	};
 	
 	postData = 'sessionid=' + session.id;
 	postData += '&cmd='+ cmd;
@@ -331,12 +413,12 @@ function runCommand(cmd){
 					console.log('parser.onerror e:', e);
 				};
 				
-				parser.ondone = function (json) {
+				parser.ondone = function (data) {
 					// Todo, enable in verbose mode?
-					//console.log('parser.onend json:', util.inspect(json, false, 100));
-					if (u.getObjectValue('nws.code', json) === '100') {
+					// console.log('parser.onend data:', util.inspect(data, false, 100));
+					if (u.getObjectValue('nws.code', data) === '100') {
 						
-						var serverd = u.getObjectValue('nws.serverd', json);
+						var serverd = u.getObjectValue('nws.serverd', data);
 						if (serverd instanceof Array) {
 							var i;
 							for (i in serverd) {
@@ -346,7 +428,7 @@ function runCommand(cmd){
 							manageServerdResponse(serverd);
 						}
 					} else {
-						console.log(u.getObjectValue('nws.msg', json));
+						console.log(u.getObjectValue('nws.msg', data));
 						setPrompt(PSTATE_CLI);
 					}
 				};

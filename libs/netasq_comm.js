@@ -114,8 +114,17 @@ exports.dumpServerdDataFormat = function (data) {
 		}
 		break;
 		
-	case "raw":
-		console.log(data.cdata);
+	case "raw": // cdata or file dl
+		if (data.cdata) {
+			console.log(data.cdata);
+			break;
+		}
+		if (data.crc && data.size) { 
+			console.log('File is ready to be downloaded\ncrc: %s, size: %s', 
+				data.crc, data.size);
+			return;
+		}
+		console.log('netasq_comm.dumpServerdDataFormat: unsupported raw data', util.inspect(data, false, 100));
 		break;
 		
 	case "list": // TODO: implement LIST format
