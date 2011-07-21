@@ -34,7 +34,7 @@ util = require('util');
 * 	getObjectValue('foo.bar', foo) returns 'value'
 * 	getObjectValue('help', foo) throw an error
 */
-exports.getObjectValue = function (str, obj) {
+function getObjectValue (str, obj) {
 	str = str || '';
 	obj = obj; 
 	if (obj === undefined) {
@@ -47,19 +47,18 @@ exports.getObjectValue = function (str, obj) {
 	i;
 	
 	for (i in prop) {
-		//console.log('prop[i] %d', i, prop[i]);
 		if (objRef.hasOwnProperty(prop[i])) {
 			objRef = objRef[prop[i]];
 		} else {
-			throw new Error('getObjectValue:' + prop[i] + ' property is undefined');
+			throw new Error('getObjectValue: "' + prop[i] + '" property is undefined!');
 		}
 	}
 	return objRef;
-};
+}
 
 (function test_getObjectValueUnitTest() {
 		try { 
-			exports.getObjectValue();
+			getObjectValue();
 		} catch(e) {
 			if (!e instanceof SyntaxError) {
 				console.log('!e instanceof SyntaxError');
@@ -68,7 +67,7 @@ exports.getObjectValue = function (str, obj) {
 		}
 		
 		try { 
-			exports.getObjectValue('');
+			getObjectValue('');
 		} catch(se) {
 			if (!se instanceof SyntaxError) {
 				console.log('!e instanceof SyntaxError');
@@ -80,12 +79,12 @@ exports.getObjectValue = function (str, obj) {
 		var foo = {
 			bar: 'toto'
 		};
-		if (exports.getObjectValue('bar', foo) !== 'toto') {
+		if (getObjectValue('bar', foo) !== 'toto') {
 			throw "getObjectValue('bar', foo) !== 'toto'";
 		}
 		
 		try {
-			exports.getObjectValue('bar.foo', foo);
+			getObjectValue('bar.foo', foo);
 		} catch(e1) {
 			if (!e1 instanceof Error) {
 				throw e1;
@@ -97,7 +96,7 @@ exports.getObjectValue = function (str, obj) {
 				a: 'b'
 			}
 		};
-		if (exports.getObjectValue('bar.a', foo) !== 'b') {
+		if (getObjectValue('bar.a', foo) !== 'b') {
 			throw "getObjectValue('bar.a', foo) !== 'b'";
 		}
 })();
@@ -107,39 +106,45 @@ exports.getObjectValue = function (str, obj) {
 * @return right and left trimmed string
 * @param {string} string to trim
 */
-exports.strTrim = function (str) {
+function strTrim (str) {
 	if (str === undefined) {
 		return '';
 	}
 	return String(str).replace(/^\s+|\s+$/g, '');
-};
+}
 
 (function test_strTrim() {
-		if (exports.strTrim() !== ''){
+		if (strTrim() !== ''){
 			throw "strTrim() !== ''";
 		}
-		if (exports.strTrim('') !== ''){
+		if (strTrim('') !== ''){
 			throw "strTrim('') !== ''";
 		}
-		if (exports.strTrim(' ') !== ''){
+		if (strTrim(' ') !== ''){
 			throw "strTrim(' ') !== ''";
 		}
-		if (exports.strTrim(' a') !== 'a'){
+		if (strTrim(' a') !== 'a'){
 			throw "strTrim(' a') !== 'a'";
 		}
-		if (exports.strTrim('a ') !== 'a'){
+		if (strTrim('a ') !== 'a'){
 			throw "strTrim('a ') !== 'a'";
 		}
-		if (exports.strTrim(' a ') !== 'a'){
+		if (strTrim(' a ') !== 'a'){
 			throw "strTrim(' a ') !== 'a'";
 		}
-		if (exports.strTrim(' a b') !== 'a b'){
+		if (strTrim(' a b') !== 'a b'){
 			throw "strTrim(' a b') !== 'a b'";
 		}
-		if (exports.strTrim('a b ') !== 'a b'){
+		if (strTrim('a b ') !== 'a b'){
 			throw "strTrim('a b ') !== 'a b'";
 		}
-		if (exports.strTrim(' a b ') !== 'a b'){
+		if (strTrim(' a b ') !== 'a b'){
 			throw "strTrim(' a b ') !== 'a b'";
 		}
 })();
+
+/*******************************************************************************
+* Exports
+*******************************************************************************/
+exports.getObjectValue = getObjectValue;
+exports.strTrim = strTrim;

@@ -36,7 +36,7 @@ b64_keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 * @public method for encoding in B64 (utf-8 compliant)
 * @param {string} input
 */
-exports.encode = function (input) {
+var encode = function (input) {
 	var output = "";
 	var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
 	var i = 0;
@@ -73,7 +73,7 @@ exports.encode = function (input) {
 * @public method for decoding b64
 * @returns {string}
 */
-exports.decode = function (input) {
+decode = function (input) {
 	var output = "";
 	var chr1, chr2, chr3;
 	var enc1, enc2, enc3, enc4;
@@ -171,3 +171,10 @@ b64_utf8_decode = function (utftext) {
 	
 	return string;
 };
+
+/*******************************************************************************
+* Exports
+*******************************************************************************/
+exports.encode = encode;
+exports.decode = decode;
+

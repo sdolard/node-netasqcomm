@@ -167,17 +167,11 @@ var XML2JSParser = function () {
 	};
 };
 
-/**
-* @exports XML2JSParser constuctor
-*/
-exports.createXML2JSParser = function() {
-	return new XML2JSParser();
-};
+
 
 
 (function test_XML2JSParser(){
-		var xml2jsparser = exports.createXML2JSParser();
-		
+		var xml2jsparser = new XML2JSParser();
 		
 		xml2jsparser.onerror = function (e) {
 			if (e.message.indexOf('Unexpected end', 0) !== 0){
@@ -209,3 +203,12 @@ exports.createXML2JSParser = function() {
 		xml2jsparser.close();
 	*/
 })();
+
+/*******************************************************************************
+* Exports
+*******************************************************************************/
+/**
+* @class
+* @public
+*/
+exports.XML2JSParser = XML2JSParser;
