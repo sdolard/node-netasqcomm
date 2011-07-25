@@ -183,10 +183,19 @@ NetasqRequest = function () {
 				session.log("NetasqRequest r.on continue' (TODO?)");
 		});
 		
-		if (options.method === 'POST') {
+		switch(options.method)
+		{
+		case 'POST':
+			if (!options.postData) {
+				throw 'options.postData do not exists!';
+			}
 			r.end(options.postData, 'utf8'); 
-		}	else {
+			break;
+		case 'GET':
 			r.end(); 
+			break;
+		default:
+			session.log("NetasqRequest unmanaged request method: %s',", options.method);
 		}
 		
 	};
@@ -196,7 +205,8 @@ NetasqRequest = function () {
 * @class
 * @inherits EventEmitter
 * @event error({Error} error || {number} errorCode, {string} errorString)
-* @event login({string} session level)
+* @event connected()
+* @event commandResponse({string} session level)
 * @params {string} login
 * @params {string} pwd
 * @params {string} host
@@ -234,13 +244,34 @@ Session = function (login, pwd, host, requiredLevel) {
 	/**
 	* @public
 	* @method
-	* Try to connect to NETASQ appliance
+	* Connect to NETASQ appliance
+	* @param [{function} callback], optionnal, use a callback or 'connected' event
 	* @see SESSION_ERRORS,
-	* @see login event
+	* @see connected event
 	* @see error event
 	*/
-	this.connect = function() {
-		authenticate(me);
+	this.connect = function(cb) {
+		authenticate(me, cb);
+	};
+	
+	// TODO: doc
+	/**
+	* 
+	*/
+	this.disconnect = function() {
+		this.exec('quit');
+	};
+	
+	/**
+	* @public
+	* @method
+	* Run a command
+	* @param {string} command
+	* @param [{function} cb()], optionnal, use a callback or 'commandResponse' event
+	* @see commandResponse event
+	*/
+	this.exec = function(cmd, cb) {
+		runCommand(me, cmd, cb);
 	};
 	
 	EventEmitter.call(this); 
@@ -353,7 +384,7 @@ function httpHeadersToSession(httpResponse, session) {
 * @function
 * @private
 */
-function authenticate (session) {
+function authenticate (session, cb) {
 	if (session.authenticated) {
 		throw "Already authenticated";	
 	}
@@ -369,7 +400,7 @@ function authenticate (session) {
 			if(u.getObjectValue('nws.value', data) === 'ok') {
 				session.authenticated = true;
 				session.log('Authenticated!');
-				login(session);
+				login(session, cb);
 			} else {
 				session.log('Authentication failed (login or password is wrong)!');
 				session.emit('error', SESSION_ERRORS.AUTH_FAILED, SESSION_ERRORS_MSG.AUTH_FAILED);
@@ -382,9 +413,12 @@ function authenticate (session) {
 * @method 
 * @private
 */
-function login (session) {
+function login (session,  cb) {
 	if (!session.authenticated) {
 		throw 'Not authenticated';
+	}
+	if (cb) {
+		session.once('connected', cb);
 	}
 	var
 	postData = '',
@@ -412,7 +446,8 @@ function login (session) {
 				session.fw.protocol = u.getObjectValue('nws.protocol', data);
 				session.fw.command = u.getObjectValue('nws.command', data);
 				session.log('Logged in.\nSession level: %s', session.sessionLevel);
-				session.emit('login');
+				session.emit('connected');
+				
 				break;
 				//setPrompt(PSTATE_CLI);
 			case '500': // { nws: { code: '500', msg: 'Too many user authenticated' } }
@@ -428,6 +463,73 @@ function login (session) {
 			}
 	});
 }
+
+function runCommand(session, cmd, cb){
+	if (!session.authenticated) {
+		throw 'Not authenticated';
+	}
+	if (cb) {
+		session.once('commandResponse', cb);
+	}
+	
+	session.lastCliCmd = cmd;
+	
+	var
+	options = {
+		host: session.host,
+		path: '/api/command',
+		method: 'POST',
+		headers: {
+			Cookie: cookiesToHeaderString(session.cookies)
+		}, 
+		postData: ''
+	};      
+	
+	// https://10.2.15.251/api/command?sessionid=6OhAqp5e0Ndc&command=help
+	
+	session.log('runCommand: %s', cmd);
+	options.postData = 'sessionid=' + session.id;
+	options.postData += '&cmd='+ cmd;
+	options.postData += '&id='+ cmd;
+	options.headers['Content-Length'] = options.postData.length;
+	
+	NetasqRequest.request(session, options, function (data){
+			session.emit('commandResponse', data);
+	});
+}
+
+
+// TODO implement
+/*
+function downloadfileCommand(fileName, path, size, crc){
+
+https://10.0.0.254/api/download/U70XXA9M1000019_16_Juil_2011.na?sessionid=IH02c7KChvmP
+Response header
+Cache-Control:no-cache, must-revalidate
+Connection:keep-alive
+Content-Disposition:attachment; filename="U70XXA9M1000019_16_Juil_2011.na"
+Content-Encoding:deflate
+Content-Length:79926
+Content-Type:application/force-download; name="U70XXA9M1000019_16_Juil_2011.na"
+Expires:0
+Pragma:no-cache
+Transfer-Encoding:chunked
+
+
+session.lastCliCmd = cmd;
+var
+postData = '',
+options = {
+host: session.host,
+path: 'api/download', // OK
+method: 'GET',
+headers: {
+Cookie: session.cookieToHeaderString()
+}
+};
+}
+*/
+
 
 /**
 * TODO
