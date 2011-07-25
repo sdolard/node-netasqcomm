@@ -26,26 +26,14 @@ var
 */
 util = require('util'),
 https = require('https'),
-netasqComm = require('./libs/netasq_comm'),
-prompt = require('./libs/prompt').prompt,
-u = require('./libs/utils'),
-
-
-/**
-* Prompt 
-*/
-i = 0,
-PSTATE_HOST=i,
-PSTATE_LOGIN=++i,
-PSTATE_PWD=++i,
-PSTATE_CLI=++i,
-MAX_PSTATE = i,
-
+prompt = require('prompt'),
+netasqComm = require('../lib/netasq-comm'),
 /**
 * Session
 */
 session = new netasqComm.Session();
-//session.verbose = true;
+
+// session.verbose = true;
 session.on('error', function(error, errorString) {
 		if (isNaN(error)) {
 			console.log('session error: %s', error.message);
@@ -56,77 +44,36 @@ session.on('error', function(error, errorString) {
 
 
 /**
-* Exception management
-* TODO: Enable it only in verbose mode
+* Prompt cli
 */
-//process.on('uncaughtException', function (err) {
-//  console.log('Caught exception: ' + err);
-//});
-
-
-
-
-/**
-* Prompt
-*/
-function setPrompt(state) {
-	switch(state)
-	{
-	case PSTATE_HOST: 
-		prompt('You want to connect to:', '10.0.0.254', false, function(error, value){
-				if (error) {
-					return;
-				}
-				session.host = value;
-				setPrompt(PSTATE_LOGIN);
-		});
-		break;
-	case PSTATE_LOGIN: 
-		prompt('login:', 'admin', false, function(error, value){
-				if (error) {
-					return;
-				}
-				session.login = value;
-				setPrompt(PSTATE_PWD);
-		});
-		break;
-	case PSTATE_PWD: 
-		prompt('password:', '', true, function(error, value){
-				if (error) {
-					return;
-				}
-				session.pwd = value;
-				session.connect(function() {
-						console.log('Logged in.');
-						console.log('Session level: %s', session.sessionLevel);		
-						setPrompt(PSTATE_CLI);
-				});
-		});
-		break;
-	case PSTATE_CLI:
-		prompt(session.login + '@' + session.host + '>', 'help', false, function(error, value){
-				if (error) {
-					return;
-				}
-				session.exec(value, function(data){
-						if (u.getObjectValue('nws.code', data) === '100') {
-							var serverd = u.getObjectValue('nws.serverd', data);
-							if (serverd instanceof Array) {
-								var i;
-								for (i = 0; i < serverd.length; i++) {
-									manageServerdResponse(serverd[i]);
-								}
-							} else {
-								manageServerdResponse(serverd);
-							}
-						} else {
-							console.log(u.getObjectValue('nws.msg', data));
-							setPrompt(PSTATE_CLI);
+function promptCli() {
+	prompt.get([
+			{
+				message: session.login + '@' + session.host,
+				name: 'cmd', 
+				default: 'help'
+			}
+	], function(error, value){
+		if (error) {
+			return;
+		}
+		session.exec(value.cmd, function(data){
+				if (netasqComm.getObjectValue('nws.code', data) === '100') {
+					var serverd = netasqComm.getObjectValue('nws.serverd', data);
+					if (serverd instanceof Array) {
+						var i;
+						for (i = 0; i < serverd.length; i++) {
+							manageServerdResponse(serverd[i]);
 						}
-				});
+					} else {
+						manageServerdResponse(serverd);
+					}
+				} else {
+					console.log(netasqComm.getObjectValue('nws.msg', data));
+					promptCli();
+				}
 		});
-		break;
-	}
+	});
 }
 
 function manageServerdResponse(serverd)
@@ -161,16 +108,44 @@ function manageServerdResponse(serverd)
 	case netasqComm.SERVERD.KO_LEVEL: // Administator do not have enought level to run specified command
 	case netasqComm.SERVERD.KO_LICENCE: // Appliance do not have licence option to run specified command
 		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
-		setPrompt(PSTATE_CLI);
+		promptCli();
 		break;
 		
 		// Others
 	default:
 		console.log('manageServerdResponse default: ', util.inspect(serverd, false, 100));
-		setPrompt(PSTATE_CLI);
+		promptCli();
 	}
 }
 
-
-setPrompt(PSTATE_HOST);
+prompt.start();
+prompt.get([
+		{
+			message: 'You want to connect to',    
+			name: 'host',                   
+			default: '10.0.0.254'                      
+		},{
+			message: 'Login',     
+			name: 'login',                   
+			default: 'admin'                
+		},{
+			message: 'Password',    
+			name: 'pwd',                          
+			hidden: true
+		}
+], function (err, result) {
+	if (err) {
+		return;
+	}
+	session.host = result.host;
+	session.login = result.login;
+	session.pwd = result.pwd;
+	
+	console.log('Connecting to %s...', session.host);
+	session.connect(function() {
+			console.log('Logged in.');
+			console.log('Session level: %s', session.sessionLevel);		
+			promptCli();
+	});
+});
 
