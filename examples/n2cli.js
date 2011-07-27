@@ -33,13 +33,13 @@ netasqComm = require('../lib/netasq-comm'),
 */
 session = new netasqComm.Session();
 
-// session.verbose = true;
+session.verbose = true;
 session.on('error', function(error, errorString) {
 		if (isNaN(error)) {
-			console.log('session error: %s', error.message);
+			console.log('%s', error.message);
 			return;
 		}
-		console.log('session error: %s (%d)', errorString, error);		
+		console.log('%s (%d)', errorString, error);		
 });
 
 
@@ -58,18 +58,24 @@ function promptCli() {
 			return;
 		}
 		session.exec(value.cmd, function(data){
-				if (netasqComm.getObjectValue('nws.code', data) === '100') {
-					var serverd = netasqComm.getObjectValue('nws.serverd', data);
+				var serverd, i;
+				switch (netasqComm.getObjectValue('nws.code', data)) {
+				case  '100': 
+					serverd = netasqComm.getObjectValue('nws.serverd', data);
 					if (serverd instanceof Array) {
-						var i;
 						for (i = 0; i < serverd.length; i++) {
 							manageServerdResponse(serverd[i]);
 						}
 					} else {
 						manageServerdResponse(serverd);
 					}
-				} else {
+					break;
+				case '203':
+					
+					break;
+				default:
 					console.log(netasqComm.getObjectValue('nws.msg', data));
+					netasqComm.getObjectValue('nws.code', data);
 					promptCli();
 				}
 		});

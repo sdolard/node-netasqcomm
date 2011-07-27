@@ -1,11 +1,12 @@
 # node-netasq-comm
 
-This is a NETASQ security appliance comm library for node.js
+This is a NETASQ security appliance comm library for node.js.
 
 * http://www.netasq.com
 * http://nodejs.org
 
-## Installation
+## Installation with npm
+This is not yet available.
 
 ### Installing npm (node package manager: http://npmjs.org/)
 
@@ -13,7 +14,7 @@ This is a NETASQ security appliance comm library for node.js
 curl http://npmjs.org/install.sh || sh	
 ```
 
-### Installing prompt
+### Installing netasq-comm
 ```
 [sudo] npm install netasq-comm (not yet)
 ```
@@ -23,7 +24,7 @@ curl http://npmjs.org/install.sh || sh
 ```
 netasqComm = require('netasq-comm'),
 
-session = new netasqComm.Session();
+session = new netasqComm.Session('admin', 'adminadmin', 10.0.0.254);
 
 // session.verbose = true; // true if you want debug logs
 
@@ -34,9 +35,14 @@ session.on('error', function(error, errorString) {
 		}
 		console.log('session error: %s (%d)', errorString, error);		
 });
-session.exec(value.cmd, function(data){
-		console.log(netasqComm.getObjectValue('nws.msg', data));
-});                                             
+
+session.connect(function() {
+		console.log('Logged in.');
+		console.log('Session level: %s', session.sessionLevel);		
+		session.exec('help', function(data){
+				console.log(netasqComm.getObjectValue('nws.msg', data));
+		});
+});                                          
 		
 ```
 
@@ -64,8 +70,8 @@ See examples/n2cli.js (or run it)
 
 ### Consts
 * `SESSION_ERRORS`: Object. Properties:
-	- AUTH_FAILED,
-	- LOGIN_FAILED,
+	- AUTH_FAILED
+	- LOGIN_FAILED
 	- TOO_MANY_USER_AUTHENTICATED
 * `SESSION_ERRORS_MSG` 
 	- AUTH_FAILED
