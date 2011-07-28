@@ -129,7 +129,7 @@ prompt.get([
 		{
 			message: 'You want to connect to',    
 			name: 'host',                   
-			default: '10.0.0.254'                      
+			default: '192.168.0.254'                      
 		},{
 			message: 'Login',     
 			name: 'login',                   
