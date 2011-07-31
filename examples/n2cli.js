@@ -59,6 +59,7 @@ function promptCli() {
 		}
 		session.exec(value.cmd, function(data){
 				var serverd, i;
+				
 				switch (netasqComm.getObjectValue('nws.code', data)) {
 				case  '100': 
 					serverd = netasqComm.getObjectValue('nws.serverd', data);
@@ -70,12 +71,13 @@ function promptCli() {
 						manageServerdResponse(serverd);
 					}
 					break;
-				case '203':
 					
+				case '203':
+					console.log(netasqComm.getObjectValue('nws.msg', data));
 					break;
+					
 				default:
 					console.log(netasqComm.getObjectValue('nws.msg', data));
-					netasqComm.getObjectValue('nws.code', data);
 					promptCli();
 				}
 		});
