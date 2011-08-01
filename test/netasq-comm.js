@@ -296,6 +296,178 @@ parser.write(xml);
 parser.close();
 
 
+// section format
+xml = [
+	'<?xml version="1.0"?>',
+	'<nws code="100" msg="OK" id="system prop"><serverd ret="101" code="00a01000" msg="Début">',
+	'<data format="section"><section title="Result">',
+	'<key name="Type" value="Firewall"/>',
+	'<key name="Model" value="U70-A"/>',
+	'<key name="Version" value="9.0.0"/>',
+	'<key name="ASQVersion" value="5.0.0"/>',
+	'<key name="SerialNumber" value="U70XXA9M1000019"/>',
+	'<key name="MTUmax" value="8996"/>',
+	'<key name="Bridge" value="4"/>',
+	'<key name="Ethernet" value="6"/>',
+	'<key name="VLAN" value="32"/>',
+	'<key name="WIFI" value="0"/>',
+	'<key name="Dialup" value="4"/>',
+	'<key name="PPTP" value="16"/>',
+	'<key name="Serial" value="0"/>',
+	'<key name="Loopback" value="7"/>',
+	'<key name="Watchdog" value="0"/>',
+	'<key name="Led" value="0"/>',
+	'<key name="Clone" value="1"/>',
+	'<key name="HADialup" value="1"/>',
+	'<key name="Raid" value="0"/>',
+	'<key name="Antiviral" value="1"/>',
+	'<key name="HighAvail" value="1"/>',
+	'<key name="Usb" value="1"/>',
+	'<key name="SwitchPort" value="6"/>',
+	'<key name="CryptoCard" value="0"/>',
+	'<key name="NTP" value="1"/>',
+	'<key name="PostprocMaxSize" value="11287"/>',
+	'</section></data></serverd>',
+	'<serverd ret="100" code="00a00100" msg="Ok"></serverd></nws>',
+].join('');
+parser.ondone = function (data) {
+	result = { 
+		nws: { 
+			serverd: [ 
+				{ 
+					data: { 
+						section: { 
+							key: [ 
+								{ 
+									name: 'Type', 
+									value: 'Firewall' 
+								},
+								{ 
+									name: 'Model', 
+									value: 'U70-A' 
+								},
+								{ 
+									name: 'Version', 
+									value: '9.0.0' 
+								},
+								{ 
+									name: 'ASQVersion', 
+									value: '5.0.0' 
+								},
+								{ 
+									name: 'SerialNumber', 
+									value: 'U70XXA9M1000019' 
+								},
+								{ 
+									name: 'MTUmax', 
+									value: '8996' 
+								},
+								{ 
+									name: 'Bridge', 
+									value: '4' 
+								},
+								{ 
+									name: 'Ethernet', 
+									value: '6' 
+								},
+								{ 
+									name: 'VLAN', 
+									value: '32' 
+								},
+								{ 
+									name: 'WIFI', 
+									value: '0' 
+								},
+								{ 
+									name: 'Dialup', 
+									value: '4' 
+								},
+								{ 
+									name: 'PPTP', 
+									value: '16' 
+								},
+								{ 
+									name: 'Serial', 
+									value: '0' 
+								},
+								{ 
+									name: 'Loopback', 
+									value: '7' 
+								},
+								{ 
+									name: 'Watchdog', 
+									value: '0' 
+								},
+								{ 
+									name: 'Led', 
+									value: '0' 
+								},
+								{ 
+									name: 'Clone', 
+									value: '1' 
+								},
+								{ 
+									name: 'HADialup', 
+									value: '1' 
+								},
+								{ 
+									name: 'Raid', 
+									value: '0' 
+								},
+								{ 
+									name: 'Antiviral', 
+									value: '1' 
+								},
+								{ 
+									name: 'HighAvail', 
+									value: '1' 
+								},
+								{ 
+									name: 'Usb', 
+									value: '1' 
+								},
+								{ 
+									name: 'SwitchPort', 
+									value: '6' 
+								},
+								{ 
+									name: 'CryptoCard', 
+									value: '0' 
+								},
+								{ 
+									name: 'NTP', 
+									value: '1' 
+								},
+								{ 
+									name: 'PostprocMaxSize', 
+									value: '11287' 
+								} 
+                   			],
+                   			title: 'Result' 
+                		},
+                		format: 'section' 
+             		},
+             		ret: '101',
+             		code: '00a01000',
+             		msg: 'Début' 
+          		},
+          		{ 
+          			ret: '100', 
+          			code: '00a00100', 
+          			msg: 'Ok' 
+          		} 
+        	],
+        	code: '100',
+        	msg: 'OK',
+        	id: 'system prop' 
+        } 
+    };
+	assert.deepEqual(data, result, 'section format');
+	// TODO: dumpServerdDataFormat
+	
+};
+parser.write(xml);
+parser.close();
 
 
 
