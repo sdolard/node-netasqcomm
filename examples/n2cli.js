@@ -33,7 +33,7 @@ netasqComm = require('../lib/netasq-comm'),
 */
 session = new netasqComm.Session();
 
-session.verbose = true;
+//session.verbose = true;
 session.on('error', function(error, errorString) {
 		if (isNaN(error)) {
 			console.log('%s', error.message);
