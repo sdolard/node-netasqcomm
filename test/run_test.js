@@ -1,13 +1,18 @@
 var 
 fs = require('fs'),
 path = require("path"),
-RE_JS_FILE=/.*.js$/;
+RE_JS_FILE=/.*.js$/g;
 
 fs.readdir(__dirname, function (err, files) {
-		var i, failures = 0, file;
+		var 
+		i, 
+		failures = 0, 
+		file;
+		
 		for(i = 0; i < files.length; i++) {
 			file = files[i];
-			if (!RE_JS_FILE.test(file)) {
+			
+			if (RE_JS_FILE.test(file) === false) {
 				continue;
 			}	
 			if (file === "run_test.js") {
@@ -15,7 +20,7 @@ fs.readdir(__dirname, function (err, files) {
 			}
 			
 			try {
-				require(path.resolve(__dirname, file))
+				require(path.resolve(__dirname, file));
 				console.log("OK - %s ", file);
 			} catch (e) {
 				console.log("KO - %s ", file, e);
@@ -23,8 +28,9 @@ fs.readdir(__dirname, function (err, files) {
 			}
 			
 		}
-		if (!failures) 
+		if (!failures) {
 			return console.log("#all pass");
+		}
 		
 		console.error("%d %s", failures, " failure" + (failures > 1 ? "s" : ""));
-})
+});

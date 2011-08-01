@@ -328,7 +328,7 @@ xml = [
 	'<key name="NTP" value="1"/>',
 	'<key name="PostprocMaxSize" value="11287"/>',
 	'</section></data></serverd>',
-	'<serverd ret="100" code="00a00100" msg="Ok"></serverd></nws>',
+	'<serverd ret="100" code="00a00100" msg="Ok"></serverd></nws>'
 ].join('');
 parser.ondone = function (data) {
 	result = { 
