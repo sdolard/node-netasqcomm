@@ -464,7 +464,6 @@ parser.ondone = function (data) {
     };
 	assert.deepEqual(data, result, 'section format');
 	// TODO: dumpServerdDataFormat
-	
 };
 parser.write(xml);
 parser.close();

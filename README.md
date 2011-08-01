@@ -66,7 +66,8 @@ See examples/n2cli.js (or run it)
 
 ### Functions
 * `dumpServerdDataFormat`
-* `getObjectValue`
+* `getObjectValue
+`
 
 ### Consts
 * `SESSION_ERRORS`: Object. Properties:
@@ -121,7 +122,10 @@ See examples/n2cli.js (or run it)
 * Not yet available with npm (on the road)
 * Limited to NETASQ V9+ firmware (https only on port 443, SRP is not supported)
 * File transfert (download/upload) is not yet supported
-  
+
+
+## Test
+Just run test/run_test.js
 
 ## License
 netasq-comm is licensed under the MIT license.
