@@ -63,12 +63,39 @@ function promptCli() {
 				switch (netasqComm.getObjectValue('nws.code', data)) {
 				case  '100': 
 					serverd = netasqComm.getObjectValue('nws.serverd', data);
-					if (serverd instanceof Array) {
-						for (i = 0; i < serverd.length; i++) {
-							manageServerdResponse(serverd[i]);
-						}
-					} else {
-						manageServerdResponse(serverd);
+					netasqComm.dumpServerdObject(serverd);
+					
+					switch(parseInt(serverd.ret, 10)) {
+						// NOT SUPPORTED
+					case netasqComm.SERVERD.OK_SERVER_WAITING_MULTI_LINES: // Success: serverd is waiting for data
+						break;
+						
+						// Disconnected
+					case netasqComm.SERVERD.OK_DISCONNECTED: // Success: Session is closed
+					case netasqComm.SERVERD.KO_AUTH: // Authentication failed
+					case netasqComm.SERVERD.KO_TIMEOUT_DISCONNECTED: // Failure: timout disonnected (no activity)
+					case netasqComm.SERVERD.KO_MAXIMUM_ADMIN_REACH: // Failure: maximum administrator are connected to appliance
+						break;
+						
+						// Multiple lines
+					case netasqComm.SERVERD.OK_MULTI_LINES: // Success multiple lines (+file download)
+					case netasqComm.SERVERD.WARNING_OK_MULTI_LINE: // Success multiple lines but multiple warning
+					case netasqComm.SERVERD.KO_MULTI_LINES:// Failure multiple line 
+						break;
+						
+						// One line
+					case netasqComm.SERVERD.OK: // Success one line
+					case netasqComm.SERVERD.OK_SERVER_NEED_REBOOT: // Success but appliance should be restarted (in order to apply modifications) 
+					case netasqComm.SERVERD.WARNING_OK: // Success one line but one warning 
+					case netasqComm.SERVERD.KO: // Failure one line
+					case netasqComm.SERVERD.KO_LEVEL: // Administator do not have enought level to run specified command
+					case netasqComm.SERVERD.KO_LICENCE: // Appliance do not have licence option to run specified command
+						promptCli();
+						break;
+						
+						// Others
+					default:
+						promptCli();
 					}
 					break;
 					
@@ -84,47 +111,6 @@ function promptCli() {
 	});
 }
 
-function manageServerdResponse(serverd)
-{	
-	switch(Number(serverd.ret)) {
-		// NOT SUPPORTED
-	case netasqComm.SERVERD.OK_SERVER_WAITING_MULTI_LINES: // Success: serverd is waiting for data
-		console.log('NOT SUPPORTED!!!\ncode="%s" msg="%s"', serverd.code, serverd.msg);
-		break;
-		
-		// Disconnected
-	case netasqComm.SERVERD.OK_DISCONNECTED: // Success: Session is closed
-	case netasqComm.SERVERD.KO_AUTH: // Authentication failed
-	case netasqComm.SERVERD.KO_TIMEOUT_DISCONNECTED: // Failure: timout disonnected (no activity)
-	case netasqComm.SERVERD.KO_MAXIMUM_ADMIN_REACH: // Failure: maximum administrator are connected to appliance
-		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
-		break;
-		
-		// Multiple lines
-	case netasqComm.SERVERD.OK_MULTI_LINES: // Success multiple lines (+file download)
-	case netasqComm.SERVERD.WARNING_OK_MULTI_LINE: // Success multiple lines but multiple warning
-	case netasqComm.SERVERD.KO_MULTI_LINES:// Failure multiple line 
-		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
-		netasqComm.dumpServerdDataFormat(serverd.data);
-		break;
-		
-		// One line
-	case netasqComm.SERVERD.OK: // Success one line
-	case netasqComm.SERVERD.OK_SERVER_NEED_REBOOT: // Success but appliance should be restarted (in order to apply modifications) 
-	case netasqComm.SERVERD.WARNING_OK: // Success one line but one warning 
-	case netasqComm.SERVERD.KO: // Failure one line
-	case netasqComm.SERVERD.KO_LEVEL: // Administator do not have enought level to run specified command
-	case netasqComm.SERVERD.KO_LICENCE: // Appliance do not have licence option to run specified command
-		console.log('code="%s" msg="%s"', serverd.code, serverd.msg);
-		promptCli();
-		break;
-		
-		// Others
-	default:
-		console.log('manageServerdResponse default: ', util.inspect(serverd, false, 100));
-		promptCli();
-	}
-}
 
 prompt.start();
 prompt.get([
