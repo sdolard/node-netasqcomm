@@ -86,9 +86,11 @@ session.connect(function() {
 * @see 'error' event
 */
 ```
+
 * disconnect
 
 * exec
+
 ```
 /**
 * @public
@@ -109,6 +111,7 @@ session.connect(function() {
 
 ### Functions
 * `dumpServerdObject`
+
 ```
 /**
 * Dump to writable stream serverd object as a human readable format (ini style),
@@ -124,7 +127,9 @@ session.connect(function() {
 * })
 */
 ```
+
 * `getObjectValue`
+
 ```
 /**
 * @public
