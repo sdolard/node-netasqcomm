@@ -55,7 +55,7 @@ session.connect(function() {
 
 ## Exports 
 
-### Session object
+### Session class
 ```
 /**
 * @class
@@ -72,7 +72,7 @@ session.connect(function() {
 * @see SESSION_LEVELS
 */
 ```
-#### Methods
+#### Session Methods
 * connect
 
 ```
@@ -102,12 +102,13 @@ session.connect(function() {
 */
 ```
 	
-#### Events
+#### Session Events
 * error
 * connected
 * commandResponse
 
-#### Properties
+#### Session Properties
+* TODO
 
 ### Functions
 * `dumpServerdObject`
