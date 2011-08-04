@@ -74,6 +74,7 @@ session.connect(function() {
 ```
 #### Methods
 * connect
+
 ```
 /**
 * @public
