@@ -22,11 +22,11 @@ curl http://npmjs.org/install.sh || sh
 ## Usage
 ### Basic 
 ```
-netasqComm = require('netasq-comm'),
+netasqComm = require('../lib/netasq-comm');
 
-session = new netasqComm.Session('admin', 'adminadmin', 10.0.0.254);
+session = new netasqComm.Session('admin', 'adminadmin', '10.0.0.254');
 
-// session.verbose = true; // true if you want debug logs
+//session.verbose = true; // true if you want debug logs
 
 session.on('error', function(error, errorString) {
 		if (isNaN(error)) {
@@ -40,23 +40,65 @@ session.connect(function() {
 		console.log('Logged in.');
 		console.log('Session level: %s', session.sessionLevel);		
 		session.exec('help', function(data){
-				console.log(netasqComm.getObjectValue('nws.msg', data));
-		});
+				netasqComm.dumpServerdObject(data.nws.serverd);
+				session.exec('quit', function(data){
+						netasqComm.dumpServerdObject(data.nws.serverd);
+				})
+		})
 });                                          
 		
 ```
 
-### Example
-See examples/n2cli.js (or run it)
+### Examples
+* examples/basic.js
+* examples/n2cli.js
 
 ## Exports 
 
 ### Session object
+```
+/**
+* @class
+* @inherits EventEmitter
+* @event error({Error} error || {number} errorCode, {string} errorString)
+* @event connected()
+* @event commandResponse({string} session level)
+* @params {string} login
+* @params {string} pwd
+* @params {string} host
+* @params [{string} requiredLevel] default to all SESSION_LEVELS
+* @see SESSION_ERRORS
+* @see SESSION_ERRORS_MSG
+* @see SESSION_LEVELS
+*/
+```
 #### Methods
 * connect
+```
+/**
+* @public
+* @method
+* Connect to NETASQ appliance
+* @param [{function} callback], optionnal, use a callback or 'connected' event
+* @see SESSION_ERRORS,
+* @see 'connected' event
+* @see 'error' event
+*/
+```
 * disconnect
-* exec
 
+* exec
+```
+/**
+* @public
+* @method
+* Run a command
+* @param {string} command
+* @param [{function} cb({object}data)], optionnal, use a callback or 'commandResponse' event
+* @see 'commandResponse' event
+*/
+```
+	
 #### Events
 * error
 * connected
@@ -65,16 +107,44 @@ See examples/n2cli.js (or run it)
 #### Properties
 
 ### Functions
-* `dumpServerdDataFormat`
-* `getObjectValue
-`
+* `dumpServerdObject`
+```
+/**
+* Dump to writable stream serverd object as a human readable format (ini style),
+* function of served format
+* @public 
+* @param {object} serverd: part of returned data
+* @param [{object}] ws: Writable Stream. Optionnal. Default to process.stdout
+* @see Session.exec
+* @see test/netasq-comm-*-format.js
+* @example
+* session.exec('help', function(data){
+* 		netasqComm.dumpServerdObject(data.nws.serverd); // This will dump data to stdout
+* })
+*/
+```
+* `getObjectValue`
+```
+/**
+* @public
+* @returns obj reference value related to str path
+* @throw error if property does not exists
+* @example
+*	foo: {
+*		bar: 'value'
+* 	}
+* 	getObjectValue('foo.bar', foo) returns 'value'
+* 	getObjectValue('help', foo) throw an error
+* @see test/get-object-value.js
+*/
+```
 
 ### Consts
-* `SESSION_ERRORS`: Object. Properties:
+* `SESSION_ERRORS`: Object of Number properties.
 	- AUTH_FAILED
 	- LOGIN_FAILED
 	- TOO_MANY_USER_AUTHENTICATED
-* `SESSION_ERRORS_MSG` 
+* `SESSION_ERRORS_MSG`: Object of String properties.
 	- AUTH_FAILED
 	- LOGIN_FAILED
 	- TOO_MANY_USER_AUTHENTICATED
@@ -101,7 +171,7 @@ See examples/n2cli.js (or run it)
 	- globalobject
 	- globalfilter
 	
-* `SERVERD`: Object. Properties:
+* `SERVERD`: Object of Number properties.
 	- OK: 100// Success one line 
 	- OK_MULTI_LINES: 101// Success multiple lines
 	- OK_SERVER_WAITING_MULTI_LINES: 102// Success: serverd is waiting for data
@@ -127,5 +197,6 @@ See examples/n2cli.js (or run it)
 ## Test
 Just run test/run_test.js
 
+
 ## License
-netasq-comm is licensed under the MIT license.
+node-netasq-comm is licensed under the MIT license.
