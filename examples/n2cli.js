@@ -28,12 +28,45 @@ util = require('util'),
 https = require('https'),
 prompt = require('prompt'),
 netasqComm = require('../lib/netasq-comm'),
+getopt = require('posix-getopt'),
+optParser, opt,
+
 /**
 * Session
 */
 session = new netasqComm.Session();
 
-//session.verbose = true;
+function displayHelp() {
+	console.log('n2cli.js [–v] [–h]');
+	console.log('NETASQ node cli example.');
+	console.log('Options:');
+	console.log('  v: enable verbose');
+	console.log('  h: display this help');
+}
+
+// Option
+optParser = new getopt.BasicParser(':hv', process.argv);
+while ((opt = optParser.getopt()) !== undefined && !opt.error) {
+	switch(opt.option) {
+	case 'v':
+		session.verbose = true;
+		break;
+		
+	case 'h':
+		displayHelp();
+		return;
+		
+	default:
+		console.log('Invalid or incomplete option');
+		displayHelp();
+		return;
+	}
+}
+
+if (session.verbose) {
+	console.log('Verbose enabled');
+}
+
 session.on('error', function(error, errorString) {
 		if (isNaN(error)) {
 			console.log('%s', error.message);

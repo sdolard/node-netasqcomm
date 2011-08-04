@@ -3,6 +3,7 @@
 	"description": "A comm library to connect to NETASQ appliance using its https API",
 	"version" : "0.1.0",
 	"author" : "Sebastien Dolard <sdolard@netasq.com>",
+	"url" : "http://github.com/sdolard/node-netasq-comm/",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/sdolard/N2CLI.git"
@@ -10,12 +11,12 @@
 	"main" : "lib/netasq-comm",
 	"license" : "MIT",
 	"scripts" : { 
-		"test" : "node test/index.js" 
+		"test" : "node test/run_test.js" 
 	},
 	"dependencies": {
 		"sax": "0.2.x",
-		//"xml2js": "0.1.x",
-		"prompt": "0.1.x" 
+		"prompt": "0.1.x",
+		"posix-getopt": "0.0.x"
 	},
 	"engines": {
 		"node": ">= 0.4.0"
