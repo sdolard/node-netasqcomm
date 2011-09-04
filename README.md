@@ -89,6 +89,14 @@ session.connect(function() {
 
 * disconnect
 
+```
+/**
+* @public
+* Run exec() with quit command 
+* @param [{function} cb({object} data)], optionnal, use a callback or 'commandResponse' event
+*/
+```
+
 * exec
 
 ```

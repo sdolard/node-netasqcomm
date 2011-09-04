@@ -27,6 +27,7 @@ var
 util = require('util'),
 https = require('https'),
 prompt = require('prompt'),
+fs = require('fs'),
 netasqComm = require('../lib/netasq-comm'),
 getopt = require('posix-getopt'),
 optParser, opt,
@@ -72,7 +73,7 @@ session.on('error', function(error, errorString) {
 			console.log('%s', error.message);
 			return;
 		}
-		console.log('%s (%d)', errorString, error);		
+		console.log('Session error: %s (%d)', errorString, error);		
 });
 
 
@@ -91,7 +92,7 @@ function promptCli() {
 			return;
 		}
 		session.exec(value.cmd, function(data){
-				var serverd, i;
+				var serverd, fileSize, fileCRC, fileName, fileWs;
 				
 				switch (netasqComm.getObjectValue('nws.code', data)) {
 				case  '100': 
@@ -114,6 +115,37 @@ function promptCli() {
 					case netasqComm.SERVERD.OK_MULTI_LINES: // Success multiple lines (+file download)
 					case netasqComm.SERVERD.WARNING_OK_MULTI_LINE: // Success multiple lines but multiple warning
 					case netasqComm.SERVERD.KO_MULTI_LINES:// Failure multiple line 
+						fileSize = '';
+						fileCRC = ''; 
+						fileName = '';
+						
+						if (netasqComm.dataFollow(data)) {
+							fileSize = data.nws.serverd.data.size;
+							fileCRC = data.nws.serverd.data.crc;
+							fileName = 'download_' + data.nws.id.replace(/\s/g, '-') + '_' + session.fw.serial;
+							
+							// We delete file if already exists
+							fs.stat(fileName, function(err, stats) {
+									if (!err) { // no erro, "something" exists
+										if (stats.isFile()) {
+											console.log('%s already exists. Deleting...', fileName);
+											fs.unlink(fileName, function(exception){
+													//console.log('in fs.unlink', exception);
+													if (exception) {
+														console.log('An error occured when trying to delete %s: ', fileName, exception);
+													} else {
+														downloadFile(session, fileName, fileWs, fileSize);
+													}
+											});
+										}
+									} else if (err.code === 'ENOENT') {
+										downloadFile(session, fileName, fileWs, fileSize);
+									} 
+							});
+							
+						} else {
+							promptCli();
+						}
 						break;
 						
 						// One line
@@ -144,13 +176,46 @@ function promptCli() {
 	});
 }
 
+function downloadFile(session, fileName, fileWs, size) {
+	// create file
+	fileWs = fs.createWriteStream(fileName, { 
+			flags: 'w',
+			//encoding: 'binary',
+			mode: 0666 
+	});
+	fileWs.on('error', function (exception) {
+			console.log('fileWs error', exception);
+	});
+	fileWs.on('close', function () {
+	//		console.log('fileWs close');
+	});
+	console.log('Download pending...');
+	session.download(fileWs, fileName, function(){
+			console.log('%s downloaded.', fileName);
+			console.log('Checking size...');
+			
+			fs.stat(fileName, function(err, stats) {
+					if (!err) { // no erro, "something" exists
+						if (stats.size !== parseInt(size, 10)) {
+							console.log('Size is not valid: %do instead of %do!', stats.size, size);
+						} else  {
+							console.log('Size is valid.');
+						}
+					} 
+					promptCli();
+			});
+			
+			
+				
+	});
+}
 
 prompt.start();
 prompt.get([
 		{
 			message: 'You want to connect to',    
 			name: 'host',                   
-			default: '192.168.0.254'                      
+			default: '192.168.115.128'                      
 		},{
 			message: 'Login',     
 			name: 'login',                   
@@ -158,7 +223,8 @@ prompt.get([
 		},{
 			message: 'Password',    
 			name: 'pwd',                          
-			hidden: true
+			hidden: true,                   
+			default: 'adminadmin'
 		}
 ], function (err, result) {
 	if (err) {
