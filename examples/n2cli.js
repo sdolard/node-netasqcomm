@@ -37,6 +37,12 @@ optParser, opt,
 */
 session = new netasqComm.Session();
 
+
+process.on('uncaughtException', function (err) {
+  console.log('Caught exception: ' + err);
+});
+
+
 function displayHelp() {
 	console.log('n2cli.js [–v] [–h]');
 	console.log('NETASQ node cli example.');
@@ -180,7 +186,7 @@ function downloadFile(session, fileName, fileWs, size) {
 	// create file
 	fileWs = fs.createWriteStream(fileName, { 
 			flags: 'w',
-			//encoding: 'binary',
+			encoding: 'binary',
 			mode: 0666 
 	});
 	fileWs.on('error', function (exception) {
@@ -192,16 +198,18 @@ function downloadFile(session, fileName, fileWs, size) {
 	console.log('Download pending...');
 	session.download(fileWs, fileName, function(){
 			console.log('%s downloaded.', fileName);
-			console.log('Checking size...');
+			console.log('Checking file size...');
 			
 			fs.stat(fileName, function(err, stats) {
 					if (!err) { // no erro, "something" exists
 						if (stats.size !== parseInt(size, 10)) {
-							console.log('Size is not valid: %do instead of %do!', stats.size, size);
+							console.log('File size is not valid: %do instead of %do!', stats.size, size);
 						} else  {
-							console.log('Size is valid.');
+							console.log('File size is valid.');
 						}
-					} 
+					} else {
+						console.log('File %s not found!.', fileName);
+					}
 					promptCli();
 			});
 			
