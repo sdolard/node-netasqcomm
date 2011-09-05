@@ -37,9 +37,8 @@ optParser, opt,
 */
 session = new netasqComm.Session();
 
-
 process.on('uncaughtException', function (err) {
-  console.log('Caught exception: ' + err);
+		console.log('Process uncaught exception: ', err);
 });
 
 
@@ -193,7 +192,7 @@ function downloadFile(session, fileName, fileWs, size) {
 			console.log('fileWs error', exception);
 	});
 	fileWs.on('close', function () {
-	//		console.log('fileWs close');
+			//		console.log('fileWs close');
 	});
 	console.log('Download pending...');
 	session.download(fileWs, fileName, function(){
@@ -214,7 +213,7 @@ function downloadFile(session, fileName, fileWs, size) {
 			});
 			
 			
-				
+			
 	});
 }
 
