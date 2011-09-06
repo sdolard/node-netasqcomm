@@ -74,11 +74,15 @@ if (session.verbose) {
 }
 
 session.on('error', function(error, errorString) {
-		if (isNaN(error)) {
-			console.log('%s', error.message);
+		if (error) {
+			if (errorString) {
+				console.log('Session error: ', errorString, error);	
+				return;
+			}
+			console.log('Session error: ', error);	
 			return;
 		}
-		console.log('Session error: %s (%d)', errorString, error);		
+		console.log('Session error occured (no details)');	
 });
 
 
