@@ -211,9 +211,6 @@ function downloadFile(session, fileName, fileWs, size) {
 					}
 					promptCli();
 			});
-			
-			
-			
 	});
 }
 
