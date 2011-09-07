@@ -37,8 +37,8 @@ optParser, opt,
 */
 session = new netasqComm.Session();
 
-process.on('uncaughtException', function (err) {
-		console.log('Process uncaught exception: ', err);
+process.on('uncaughtException', function (exception) {
+		console.error('Process uncaught exception: ', exception.message);
 });
 
 
@@ -79,7 +79,7 @@ session.on('error', function(error, errorString) {
 				console.log('Session error: ', errorString, error);	
 				return;
 			}
-			console.log('Session error: ', error);	
+			console.log('Session error: ', error.message);	
 			return;
 		}
 		console.log('Session error occured (no details)');	
