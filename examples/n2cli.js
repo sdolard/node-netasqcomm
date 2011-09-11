@@ -73,13 +73,9 @@ if (session.verbose) {
 	console.log('Verbose enabled');
 }
 
-session.on('error', function(error, errorString) {
+session.on('error', function(error) {
 		if (error) {
-			if (errorString) {
-				console.log('Session error: ', errorString, error);	
-				return;
-			}
-			console.log('Session error: ', error.message);	
+			console.log('Session error (%s): %s', error.code, error.message);	
 			return;
 		}
 		console.log('Session error occured (no details)');	
