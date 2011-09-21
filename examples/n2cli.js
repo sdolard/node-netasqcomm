@@ -30,7 +30,7 @@ prompt = require('prompt'),
 fs = require('fs'),
 netasqComm = require('../lib/netasq-comm'),
 getopt = require('posix-getopt'),
-optParser, opt,
+optParser, opt, promptArray = [],
 
 /**
 * Session
@@ -43,24 +43,49 @@ process.on('uncaughtException', function (exception) {
 
 
 function displayHelp() {
-	console.log('n2cli.js [–v] [–h]');
+	console.log('n2cli.js [–v] [–h] [–s] [–a address] [-l login] [-p password] [-P port]');
 	console.log('NETASQ node cli example.');
 	console.log('Options:');
 	console.log('  v: enable verbose');
 	console.log('  h: display this help');
+	console.log('  a: firewall address');
+	console.log('  l: login');
+	console.log('  p: password');
+	console.log('  P: port');
+	console.log('  d: disable ssl');
 }
 
 // Option
-optParser = new getopt.BasicParser(':hv', process.argv);
+optParser = new getopt.BasicParser(':hdva:l:p:P:', process.argv);
 while ((opt = optParser.getopt()) !== undefined && !opt.error) {
 	switch(opt.option) {
-	case 'v':
+	case 'v': // verbose
 		session.verbose = true;
 		break;
 		
-	case 'h':
+	case 'h': // help
 		displayHelp();
 		return;
+		
+	case 'a': // address
+		session.host = opt.optarg;
+		break;
+		
+	case 'l': // login
+		session.login = opt.optarg;
+		break;
+		
+	case 'p': // password
+		session.pwd = opt.optarg;
+		break;
+		
+	case 'P': // port
+		session.port = opt.optarg;
+		break;
+		
+	case 'd': // disable ssl
+		session.ssl = false;
+		break;
 		
 	default:
 		console.log('Invalid or incomplete option');
@@ -105,8 +130,25 @@ function promptCli() {
 					netasqComm.dumpServerdObject(serverd);
 					
 					switch(parseInt(serverd.ret, 10)) {
-						// NOT SUPPORTED
 					case netasqComm.SERVERD.OK_SERVER_WAITING_MULTI_LINES: // Success: serverd is waiting for data
+						console.log('netasqComm.SERVERD.OK_SERVER_WAITING_MULTI_LINES');
+						prompt.get([
+								{
+									message: 'File to upload',    
+									name: 'file', 
+									default: '/Users/sebastiend/Dev/perso/node/node-netasq-comm/LICENSE'           
+								}
+						], function (err, result) {
+							if (err) {
+								return;
+							}
+							console.log('Uploading to %s...', result.file);
+							session.upload(result.file, function() {
+									console.log('Upload done');	
+									promptCli();
+							});
+						});
+						
 						break;
 						
 						// Disconnected
@@ -169,10 +211,11 @@ function promptCli() {
 					}
 					break;
 					
-				case '203':
+				case '203': // ?
+				case '200': // no session
 					console.log(netasqComm.getObjectValue('nws.msg', data));
 					break;
-					
+						
 				default:
 					console.log(netasqComm.getObjectValue('nws.msg', data));
 					promptCli();
@@ -215,34 +258,55 @@ function downloadFile(session, fileName, fileWs, size) {
 }
 
 prompt.start();
-prompt.get([
-		{
+
+if (session.host === '') {	
+	promptArray.push({
 			message: 'You want to connect to',    
 			name: 'host',                   
 			default: '192.168.115.128'                      
-		},{
+	});
+}
+
+if (session.login === '') {	
+	promptArray.push({
 			message: 'Login',     
 			name: 'login',                   
 			default: 'admin'                
-		},{
+	});
+}
+
+if (session.pwd === '') {	
+	promptArray.push({
 			message: 'Password',    
 			name: 'pwd',                          
 			hidden: true,                   
 			default: 'adminadmin'
-		}
-], function (err, result) {
-	if (err) {
-		return;
-	}
-	session.host = result.host;
-	session.login = result.login;
-	session.pwd = result.pwd;
-	
-	console.log('Connecting to %s...', session.host);
+	});
+}
+
+function connect() {
+	console.log('Connecting to %s:%s...', session.host, session.port);
 	session.connect(function() {
 			console.log('Logged in.');
 			console.log('Session level: %s', session.sessionLevel);		
 			promptCli();
 	});
-});
+}
+
+if (promptArray.length === 0) {
+	connect();
+} else {
+	prompt.get(promptArray, function (err, result) {
+			if (err) {
+				return;
+			}
+			session.host = result.host || session.host;
+			session.login = result.login || session.login;
+			session.pwd = result.pwd || session.pwd;
+			connect();
+	});
+}
+
+
+
 
