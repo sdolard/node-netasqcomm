@@ -43,7 +43,7 @@ process.on('uncaughtException', function (exception) {
 
 
 function displayHelp() {
-	console.log('n2cli.js [–v] [–h] [–s] [–a address] [-l login] [-p password] [-P port]');
+	console.log('n2cli.js [–v] [–h] [–s] [-d] [–a address] [-l login] [-p password] [-P port]');
 	console.log('NETASQ node cli example.');
 	console.log('Options:');
 	console.log('  v: enable verbose');
@@ -101,9 +101,11 @@ if (session.verbose) {
 session.on('error', function(error) {
 		if (error) {
 			console.log('Session error (%s): %s', error.code, error.message);	
+			process.exit(1);
 			return;
 		}
-		console.log('Session error occured (no details)');	
+		console.log('Session error occured (no details)');
+		process.exit(1);
 });
 
 
@@ -136,7 +138,7 @@ function promptCli() {
 								{
 									message: 'File to upload',    
 									name: 'file', 
-									default: '/Users/sebastiend/Dev/perso/node/node-netasq-comm/LICENSE'           
+									default: '/Users/sebastiend/Dev/perso/node/node-netasq-comm/download_config-backup-list=object_V50XXA0H0000003'           
 								}
 						], function (err, result) {
 							if (err) {
