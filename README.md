@@ -24,16 +24,22 @@ curl http://npmjs.org/install.sh || sh
 ```
 netasqComm = require('../lib/netasq-comm');
 
-session = new netasqComm.Session('admin', 'adminadmin', '10.0.0.254');
+session = new netasqComm.Session({
+		login: 'admin',
+		pwd: 'adminadmin',
+		host: '10.0.0.254'
+});
 
 //session.verbose = true; // true if you want debug logs
 
-session.on('error', function(error, errorString) {
-		if (isNaN(error)) {
-			console.log('session error: %s', error.message);
+session.on('error', function(error) {
+		if (error) {
+			console.log('Session error (%s): %s', error.code, error.message);	
+			process.exit(1);
 			return;
 		}
-		console.log('session error: %s (%d)', errorString, error);		
+		console.log('Session error occured (no details)');
+		process.exit(1);		
 });
 
 session.connect(function() {
@@ -45,7 +51,7 @@ session.connect(function() {
 						netasqComm.dumpServerdObject(data.nws.serverd);
 				})
 		})
-});                                          
+});                                        
 		
 ```
 
