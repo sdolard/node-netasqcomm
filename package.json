@@ -1,12 +1,14 @@
 { 
 	"name" : "netasq-comm",
-	"description": "A comm library to connect to NETASQ appliance using its https API",
+	"description": "A comm library to connect to NETASQ appliance using its http/https API",
 	"version" : "0.1.0",
-	"author" : "Sebastien Dolard <sdolard@netasq.com>",
+	"author" : "Sebastien Dolard",
+	"email" : "sdolard@gmail.com",
+	"keywords" : ["netasq", "comm"],
 	"url" : "http://github.com/sdolard/node-netasq-comm/",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/sdolard/N2CLI.git"
+		"url": "https://github.com/sdolard/node-netasq-comm.git"
 	},
 	"main" : "lib/netasq-comm",
 	"license" : "MIT",
@@ -20,6 +22,16 @@
 	},
 	"engines": {
 		"node": ">= 0.4.0"
-	}
+	}, 
+	"bugs" :
+	{ 
+		"web" : "https://github.com/sdolard/node-netasq-comm/issues"
+	}, 
+	"licenses" : [
+		{ 
+			"type" : "MIT", 
+			"url" : "https://raw.github.com/sdolard/node-netasq-comm/master/LICENSE"
+		}
+	]
 }
 

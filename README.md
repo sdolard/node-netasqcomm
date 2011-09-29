@@ -16,12 +16,12 @@ curl http://npmjs.org/install.sh || sh
 
 ### Installing netasq-comm
 ```
-[sudo] npm install netasq-comm (not yet)
+[sudo] npm install [-g] netasq-comm
 ```
 
 ## Usage
 ### Basic 
-```
+```javascript
 netasqComm = require('../lib/netasq-comm');
 
 session = new netasqComm.Session({
@@ -66,20 +66,18 @@ session.connect(function() {
 /**
 * @class
 * @inherits EventEmitter
-* @event error({Error} error || {number} errorCode, {string} errorString)
+* @event error({exception}) > {code, message, ...}
 * @event connected()
 * @event commandResponse({string} session level)
-* @params {string} login
-* @params {string} pwd
-* @params {string} host
-* @params [{string} requiredLevel] default to all SESSION_LEVELS
+* @event downloaded()
+* @params {object} config
 * @see SESSION_ERRORS
 * @see SESSION_ERRORS_MSG
 * @see SESSION_LEVELS
 */
 ```
 #### Session Methods
-* connect
+* `connect`
 
 ```
 /**
@@ -93,7 +91,7 @@ session.connect(function() {
 */
 ```
 
-* disconnect
+* `disconnect`
 
 ```
 /**
@@ -103,7 +101,7 @@ session.connect(function() {
 */
 ```
 
-* exec
+* `exec`
 
 ```
 /**
@@ -115,11 +113,35 @@ session.connect(function() {
 * @see 'commandResponse' event
 */
 ```
-	
+
+* `download`
+
+```
+/**
+* @public
+* @params {object} wStream: Writable Stream
+* @params {string} fileName
+* @param [{function} cb({object}data)], optionnal, use a callback or 'downloaded' event
+*/
+```
+
+* `upload`
+
+```
+/**
+* @public
+* @params {string} fileName
+* @param [{function} cb({object}data)], optionnal, use a callback or 'uploaded' event
+*/
+```
+
 #### Session Events
-* error
-* connected
-* commandResponse
+* `error`
+* `connected`
+* `commandResponse`
+* `downloaded`
+* `uploaded`
+
 
 #### Session Properties
 * TODO
@@ -211,8 +233,7 @@ session.connect(function() {
 
 ## Known issues
 * Not yet available with npm (on the road)
-* Limited to NETASQ V9+ firmware (https only on port 443, SRP is not supported)
-* File transfert (download/upload) is not yet supported
+* Limited to NETASQ V9+ firmware (https OR HTTP, SRP is not supported)
 
 
 ## Test
