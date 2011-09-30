@@ -6,7 +6,10 @@ This is a NETASQ security appliance comm library for node.js.
 * http://nodejs.org
 
 ## Installation with npm
-This is not yet available.
+
+```
+npm install netasq-comm
+```
 
 ### Installing npm (node package manager: http://npmjs.org/)
 
@@ -232,7 +235,6 @@ session.connect(function() {
 	
 
 ## Known issues
-* Not yet available with npm (on the road)
 * Limited to NETASQ V9+ firmware (https OR HTTP, SRP is not supported)
 
 
