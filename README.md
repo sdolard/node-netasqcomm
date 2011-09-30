@@ -6,11 +6,6 @@ This is a NETASQ security appliance comm library for node.js.
 * http://nodejs.org
 
 ## Installation with npm
-
-```
-npm install netasq-comm
-```
-
 ### Installing npm (node package manager: http://npmjs.org/)
 
 ```
