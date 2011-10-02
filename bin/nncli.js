@@ -288,7 +288,7 @@ if (session.host === '') {
 	promptArray.push({
 			message: 'You want to connect to',    
 			name: 'host',                   
-			default: '192.168.115.128'                      
+			default: '10.0.0.254'                      
 	});
 }
 
@@ -305,7 +305,7 @@ if (session.pwd === '') {
 			message: 'Password',    
 			name: 'pwd',                          
 			hidden: true,                   
-			default: 'adminadmin'
+			default: 'admin'
 	});
 }
 
