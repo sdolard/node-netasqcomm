@@ -14,9 +14,12 @@ curl http://npmjs.org/install.sh || sh
 ```
 
 ### Installing netasq-comm
+
 ```
 [sudo] npm install [-g] netasq-comm
 ```
+nncli (bin) will be only available with global (-g) option.
+
 
 ## Usage
 ### Basic 
