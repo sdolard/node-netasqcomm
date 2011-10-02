@@ -1,11 +1,14 @@
 { 
 	"name" : "netasq-comm",
-	"description": "A comm library to connect to NETASQ appliance using its http/https API",
-	"version" : "0.1.0",
+	"description": "A comm library to connect to NETASQ security appliances",
+	"version" : "0.1.1",
 	"author" : "Sebastien Dolard",
 	"email" : "sdolard@gmail.com",
 	"keywords" : ["netasq", "comm"],
 	"url" : "http://github.com/sdolard/node-netasq-comm/",
+	"bin" : { 
+		"nncli" : "./bin/nncli.js" 
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/sdolard/node-netasq-comm.git"

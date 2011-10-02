@@ -152,9 +152,13 @@ function manageResponse(data) {
 			
 			// Disconnected
 		case netasqComm.SERVERD.OK_DISCONNECTED: // Success: Session is closed
+			process.exit(0);
+			break;
+			
 		case netasqComm.SERVERD.KO_AUTH: // Authentication failed
 		case netasqComm.SERVERD.KO_TIMEOUT_DISCONNECTED: // Failure: timout disonnected (no activity)
 		case netasqComm.SERVERD.KO_MAXIMUM_ADMIN_REACH: // Failure: maximum administrator are connected to appliance
+			process.exit(1);
 			break;
 			
 			// Multiple lines
