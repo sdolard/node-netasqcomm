@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
 Copyright © 2011 by Sebastien Dolard (sdolard@gmail.com)
 
@@ -58,8 +59,8 @@ process.on('uncaughtException', function (exception) {
 * Display help
 */
 function displayHelp() {
-	console.log('n2cli.js [–v] [–h] [–s] [-d] [–a address] [-l login] [-p password] [-P port]');
-	console.log('NETASQ node cli example.');
+	console.log('nncli [–v] [–h] [–s] [-d] [–a address] [-l login] [-p password] [-P port]');
+	console.log('NETASQ Node CLI.');
 	console.log('Options:');
 	console.log('  v: enable verbose');
 	console.log('  h: display this help');

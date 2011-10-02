@@ -11,11 +11,10 @@ session = new netasqComm.Session({
 session.on('error', function(error) {
 		if (error) {
 			console.log('Session error (%s): %s', error.code, error.message);	
-			process.exit(1);
-			return;
+		} else {
+			console.log('Session error occured (no details)');
 		}
-		console.log('Session error occured (no details)');
-		process.exit(1);		
+		process.exit(1);
 });
 
 session.connect(function() {

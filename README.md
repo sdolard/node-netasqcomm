@@ -1,6 +1,7 @@
 # node-netasq-comm
 
 This is a NETASQ security appliance comm library for node.js.
+It contains also a cli: nncli (Netasq Node CLI)
 
 * http://www.netasq.com
 * http://nodejs.org
@@ -20,7 +21,7 @@ curl http://npmjs.org/install.sh || sh
 ## Usage
 ### Basic 
 ```javascript
-netasqComm = require('../lib/netasq-comm');
+netasqComm = require('netasq-comm');
 
 session = new netasqComm.Session({
 		login: 'admin',
@@ -33,11 +34,10 @@ session = new netasqComm.Session({
 session.on('error', function(error) {
 		if (error) {
 			console.log('Session error (%s): %s', error.code, error.message);	
-			process.exit(1);
-			return;
+		} else {
+			console.log('Session error occured (no details)');
 		}
-		console.log('Session error occured (no details)');
-		process.exit(1);		
+		process.exit(1);
 });
 
 session.connect(function() {
@@ -55,7 +55,7 @@ session.connect(function() {
 
 ### Examples
 * examples/basic.js
-* examples/n2cli.js
+* bin/nncli.js
 
 ## Exports 
 
