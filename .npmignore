@@ -1,3 +1,7 @@
-git_hooks
+git_hooks/pre-commit
 node_modules
+examples/*~
+bin/*~
+lib/*~
+test/*~
 *~
