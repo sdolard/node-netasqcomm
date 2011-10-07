@@ -47,6 +47,12 @@ session.on('error', function(error) {
 		process.exit(1);
 });
 
+session.on('disconnected', function() {
+		console.log('Disconnected');
+		process.exit(0);
+});
+
+
 /**
 * Uncaught exception 
 */
@@ -157,7 +163,7 @@ function manageResponse(data) {
 			break;
 			
 		case netasqComm.SERVERD.KO_AUTH: // Authentication failed
-		case netasqComm.SERVERD.KO_TIMEOUT_DISCONNECTED: // Failure: timout disonnected (no activity)
+		case netasqComm.SERVERD.KO_TIMEOUT_DISCONNECTED: // Failure: timout disconnected (no activity)
 		case netasqComm.SERVERD.KO_MAXIMUM_ADMIN_REACH: // Failure: maximum administrator are connected to appliance
 			process.exit(1);
 			break;

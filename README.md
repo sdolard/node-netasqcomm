@@ -71,6 +71,7 @@ session.connect(function() {
 * @event connected()
 * @event commandResponse({string} session level)
 * @event downloaded()
+* @event disconnected()
 * @params {object} config
 * @see SESSION_ERRORS
 * @see SESSION_ERRORS_MSG
@@ -98,7 +99,7 @@ session.connect(function() {
 /**
 * @public
 * Run exec() with quit command 
-* @param [{function} cb({object} data)], optionnal, use a callback or 'commandResponse' event
+* @param [{function} cb({object} data)], optionnal, use a callback or 'commandResponse' event OR 'disconnected' event
 */
 ```
 
@@ -142,7 +143,7 @@ session.connect(function() {
 * `commandResponse`
 * `downloaded`
 * `uploaded`
-
+* `disconnected`
 
 #### Session Properties
 * TODO
