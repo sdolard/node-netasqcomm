@@ -234,7 +234,7 @@ session.connect(function() {
 	
 
 ## Known issues
-* Limited to NETASQ V9+ firmware (https OR HTTP, SRP is not supported)
+* Limited to NETASQ V9+ firmware (http(s), SRP is not supported)
 
 
 ## Test

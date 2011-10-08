@@ -1,7 +1,7 @@
 { 
 	"name" : "netasq-comm",
 	"description": "A comm library and a CLI to connect to NETASQ security appliances",
-	"version" : "0.1.1",
+	"version" : "0.1.2",
 	"author" : "Sebastien Dolard",
 	"email" : "sdolard@gmail.com",
 	"keywords" : ["netasq", "comm", "cli"],

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 /*
 Copyright © 2011 by Sebastien Dolard (sdolard@gmail.com)
 
@@ -30,7 +30,7 @@ https = require('https'),
 prompt = require('prompt'),
 fs = require('fs'),
 netasqComm = require('../lib/netasq-comm'),
-getopt = require('posix-getopt'),
+getopt = require('posix-getopt'), // contrib
 optParser, opt, promptArray = [],
 
 /**
@@ -123,6 +123,58 @@ while ((opt = optParser.getopt()) !== undefined && !opt.error) {
 */
 if (session.verbose) {
 	console.log('Verbose enabled');
+}
+
+/**
+* Prompt cli
+*/
+function promptCli() {
+	prompt.get([
+			{
+				message: session.login + '@' + session.host,
+				name: 'cmd', 
+				default: 'help'
+			}
+	], function(error, value){
+		if (error) {
+			return;
+		}
+		session.exec(value.cmd, manageResponse);
+	});
+}
+
+
+function downloadFile(session, fileName, fileWs, size) {
+	// create file
+	fileWs = fs.createWriteStream(fileName, { 
+			flags: 'w',
+			encoding: 'binary',
+			mode: 0666 
+	});
+	fileWs.on('error', function (exception) {
+			console.log('fileWs error', exception);
+	});
+	/*fileWs.on('close', function () {
+			//		console.log('fileWs close');
+	});*/
+	console.log('Download pending...');
+	session.download(fileWs, fileName, function(){
+			console.log('%s downloaded.', fileName);
+			console.log('Checking file size...');
+			
+			fs.stat(fileName, function(err, stats) {
+					if (!err) { // no erro, "something" exists
+						if (stats.size !== parseInt(size, 10)) {
+							console.log('File size is not valid: %do instead of %do!', stats.size, size);
+						} else  {
+							console.log('File size is valid.');
+						}
+					} else {
+						console.log('File %s not found!.', fileName);
+					}
+					promptCli();
+			});
+	});
 }
 
 /**
@@ -232,57 +284,6 @@ function manageResponse(data) {
 	}
 }
 
-/**
-* Prompt cli
-*/
-function promptCli() {
-	prompt.get([
-			{
-				message: session.login + '@' + session.host,
-				name: 'cmd', 
-				default: 'help'
-			}
-	], function(error, value){
-		if (error) {
-			return;
-		}
-		session.exec(value.cmd, manageResponse);
-	});
-}
-
-
-function downloadFile(session, fileName, fileWs, size) {
-	// create file
-	fileWs = fs.createWriteStream(fileName, { 
-			flags: 'w',
-			encoding: 'binary',
-			mode: 0666 
-	});
-	fileWs.on('error', function (exception) {
-			console.log('fileWs error', exception);
-	});
-	/*fileWs.on('close', function () {
-			//		console.log('fileWs close');
-	});*/
-	console.log('Download pending...');
-	session.download(fileWs, fileName, function(){
-			console.log('%s downloaded.', fileName);
-			console.log('Checking file size...');
-			
-			fs.stat(fileName, function(err, stats) {
-					if (!err) { // no erro, "something" exists
-						if (stats.size !== parseInt(size, 10)) {
-							console.log('File size is not valid: %do instead of %do!', stats.size, size);
-						} else  {
-							console.log('File size is valid.');
-						}
-					} else {
-						console.log('File %s not found!.', fileName);
-					}
-					promptCli();
-			});
-	});
-}
 
 
 /**
