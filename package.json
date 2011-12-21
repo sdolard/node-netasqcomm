@@ -1,40 +1,43 @@
-{ 
-	"name" : "netasq-comm",
-	"description": "A comm library and a CLI to connect to NETASQ security appliances",
-	"version" : "0.1.2",
-	"author" : "Sebastien Dolard",
-	"email" : "sdolard@gmail.com",
-	"keywords" : ["netasq", "comm", "cli"],
-	"url" : "http://github.com/sdolard/node-netasq-comm/",
-	"bin" : { 
-		"nncli" : "./bin/nncli.js" 
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/sdolard/node-netasq-comm.git"
-	},
-	"main" : "lib/netasq-comm",
-	"license" : "MIT",
-	"scripts" : { 
-		"test" : "node test/run_test.js" 
-	},
-	"dependencies": {
-		"sax": "0.2.x",
-		"prompt": "0.1.x",
-		"posix-getopt": "0.0.x"
-	},
-	"engines": {
-		"node": ">= 0.4.0"
-	}, 
-	"bugs" :
-	{ 
-		"web" : "https://github.com/sdolard/node-netasq-comm/issues"
-	}, 
-	"licenses" : [
-		{ 
-			"type" : "MIT", 
-			"url" : "https://raw.github.com/sdolard/node-netasq-comm/master/LICENSE"
-		}
-	]
+{
+  "name": "netasq-comm",
+  "description": "A comm library and a CLI to connect to NETASQ security appliances",
+  "version": "0.1.2",
+  "author": "Sebastien Dolard <sdolard@gmail.com>",
+  "email": "sdolard@gmail.com",
+  "keywords": [
+    "netasq",
+    "comm",
+    "cli"
+  ],
+  "bin": {
+    "nncli": "./bin/nncli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sdolard/node-netasq-comm.git"
+  },
+  "main": "lib/netasq-comm",
+  "license": "MIT",
+  "scripts": {
+    "test": "node test/run_test.js"
+  },
+  "dependencies": {
+    "sax": "0.2.x",
+    "prompt": "0.1.x",
+    "posix-getopt": "0.0.x"
+  },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "bugs": {
+    "url": "https://github.com/sdolard/node-netasq-comm/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/sdolard/node-netasq-comm/master/LICENSE"
+    }
+  ],
+  "devDependencies": {},
+  "homepage": "http://github.com/sdolard/node-netasq-comm/"
 }
-
