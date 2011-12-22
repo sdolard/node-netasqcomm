@@ -37,7 +37,7 @@ StrStream.prototype.write = function(s) {
 	//console.log('StrStream.prototype.write %s', this.text);
 };
 
-parser = new xml2jsparser.XML2JSParser();
+parser = xml2jsparser.create();
 parser.onerror = function (e) {
 	// an error happened.
 	console.log('parser.onerror e:', e);

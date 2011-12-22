@@ -26,7 +26,7 @@ util = require('util'),
 xml2jsparser = require('../lib/xml2jsparser'),
 xml, 
 result,
-parser= new xml2jsparser.XML2JSParser();
+parser = xml2jsparser.create();
 parser.onerror = function (e) {
 	// an error happened.
 	console.log('parser.onerror e:', e);
