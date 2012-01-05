@@ -22,23 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 
 var
 assert = require('assert'),
-nc = require('../lib/netasq-comm');
+session = require('../lib/netasq-comm').createSession(),
+EUNDEFPROP_count = 0;
+
 
 try { 
-	getObjectValue();
+	session.getObjectValue();
 } catch(e) {
-	if (!e instanceof SyntaxError) {
-		console.log('!e instanceof SyntaxError');
-		throw e;
-	}
-}
-
-try { 
-	getObjectValue('');
-} catch(se) {
-	if (!se instanceof SyntaxError) {
-		console.log('!e instanceof SyntaxError');
-		throw se;
+	if (e.code === 'EUNDEFPROP') {
+		EUNDEFPROP_count++; 
 	}
 }
 
@@ -46,12 +38,13 @@ try {
 var foo = {
 	bar: 'toto'
 };
-assert.equal(nc.getObjectValue('bar', foo), 'toto');
-try {
-	getObjectValue('bar.foo', foo);
-} catch(e1) {
-	if (!e1 instanceof Error) {
-		throw e1;
+assert.equal(session.getObjectValue('bar', foo), 'toto');
+
+try { 
+	session.getObjectValue('bar.foo', foo);
+} catch(se) {
+	if (se.code === 'EUNDEFPROP') {
+		EUNDEFPROP_count++; 
 	}
 }
 
@@ -61,5 +54,7 @@ foo = {
 		a: 'b'
 	}
 };
-assert.strictEqual(nc.getObjectValue('bar.a', foo), 'b');
-assert.strictEqual(nc.getObjectValue('bar', foo), foo.bar);
+assert.strictEqual(session.getObjectValue('bar', foo), foo.bar);
+assert.strictEqual(session.getObjectValue('bar.a', foo), 'b');
+
+assert.strictEqual(EUNDEFPROP_count, 2, "EUNDEFPROP_count");

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 /*
 Copyright © 2011 by Sebastien Dolard (sdolard@gmail.com)
 
@@ -36,7 +36,7 @@ optParser, opt, promptArray = [],
 /**
 * Session
 */
-session = new netasqComm.Session();
+session = new netasqComm.createSession();
 session.on('error', function(error) {
 		if (error) {
 			console.log('Session error (%s): %s', error.code, error.message);	
@@ -58,6 +58,10 @@ session.on('disconnected', function() {
 */
 process.on('uncaughtException', function (exception) {
 		console.error('Process uncaught exception: ', exception.message);
+		if (session.verbose && typeof exception.stack === 'string') {
+			console.log(exception.stack);
+		}
+		process.exit(1);
 });
 
 
@@ -185,9 +189,9 @@ function downloadFile(session, fileName, fileWs, size) {
 function manageResponse(data) {
 	var serverd, fileSize, fileCRC, fileName, fileWs;
 	
-	switch (parseInt(netasqComm.getObjectValue('nws.code', data),10)) {
+	switch (parseInt(session.getObjectValue('nws.code', data),10)) {
 	case netasqComm.NWS_ERROR_CODE.OK: 
-		serverd = netasqComm.getObjectValue('nws.serverd', data);
+		serverd = session.getObjectValue('nws.serverd', data);
 		netasqComm.dumpServerdObject(serverd);
 		
 		switch(parseInt(serverd.ret, 10)) {
@@ -275,11 +279,11 @@ function manageResponse(data) {
 		
 	case netasqComm.NWS_ERROR_CODE.INVALID_SESSION:
 	case netasqComm.NWS_ERROR_CODE.REQUEST_ERROR: 
-		console.log(netasqComm.getObjectValue('nws.msg', data));
+		console.log(session.getObjectValue('nws.msg', data));
 		break;
 		
 	default:
-		console.log(netasqComm.getObjectValue('nws.msg', data));
+		console.log(session.getObjectValue('nws.msg', data));
 		promptCli();
 	}
 }
@@ -321,6 +325,9 @@ function connect() {
 	session.connect(function() {
 			console.log('Logged in.');
 			console.log('Session level: %s', session.sessionLevel);		
+			if (session.fw.needReboot) {
+				console.log('* This appliance require to reboot. *');	
+			}
 			promptCli();
 	});
 }
