@@ -61,7 +61,7 @@ session.connect(function() {
 
 ## Exports 
 
-### Session class
+### Session class 
 ```
 /**
 * @class
