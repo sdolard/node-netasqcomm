@@ -22,26 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 
 var
 assert = require('assert'),
-session = require('../lib/netasq-comm').createSession(),
-EUNDEFPROP_count = 0;
+sdr = require('../lib/session_data_response').create(),
+EUNDEFPROP_count = 0,
+ENODATA_count = 0;
 
-
+// ENODATA event
 try { 
-	session.getObjectValue();
+	sdr.getValue();
 } catch(e) {
-	if (e.code === 'EUNDEFPROP') {
-		EUNDEFPROP_count++; 
+	if (e.code === 'ENODATA') {
+		ENODATA_count++; 
 	}
 }
 
+// empty data
+sdr.data = {};
+assert.strictEqual(sdr.getValue(), sdr.data);
 
-var foo = {
-	bar: 'toto'
-};
-assert.equal(session.getObjectValue('bar', foo), 'toto');
 
+// EUNDEFPROP event
 try { 
-	session.getObjectValue('bar.foo', foo);
+	sdr.getValue(' ');
 } catch(se) {
 	if (se.code === 'EUNDEFPROP') {
 		EUNDEFPROP_count++; 
@@ -49,12 +50,14 @@ try {
 }
 
 
-foo = {
+sdr.data = {
 	bar: {
 		a: 'b'
 	}
 };
-assert.strictEqual(session.getObjectValue('bar', foo), foo.bar);
-assert.strictEqual(session.getObjectValue('bar.a', foo), 'b');
+assert.strictEqual(sdr.getValue('bar'), sdr.data.bar);
+assert.strictEqual(sdr.getValue('bar.a'), sdr.data.bar.a);
 
-assert.strictEqual(EUNDEFPROP_count, 2, "EUNDEFPROP_count");
+// event
+assert.strictEqual(ENODATA_count, 1, "ENODATA_count");
+assert.strictEqual(EUNDEFPROP_count, 1, "EUNDEFPROP_count");

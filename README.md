@@ -1,7 +1,7 @@
-# node-netasq-comm
+# node-netasqcomm
 
 This is a NETASQ security appliance comm library for node.js.
-It contains also a cli: nncli (Netasq Node CLI)
+It contains also a cli: nncli (NETASQ Node CLI)
 
 * http://www.netasq.com
 * http://nodejs.org
@@ -13,10 +13,10 @@ It contains also a cli: nncli (Netasq Node CLI)
 curl http://npmjs.org/install.sh || sh	
 ```
 
-### Installing netasq-comm
+### Installing netasqcomm
 
 ```
-[sudo] npm install [-g] netasq-comm
+[sudo] npm install [-g] netasqcomm
 ```
 nncli (bin) will be only available with global (-g) option.
 
@@ -24,15 +24,14 @@ nncli (bin) will be only available with global (-g) option.
 ## Usage
 ### Basic 
 ```javascript
-netasqComm = require('netasq-comm');
-
-session = new netasqComm.Session({
+var
+session = require('../lib/netasqcomm').createSession({
 		login: 'admin',
 		pwd: 'adminadmin',
-		host: '10.0.0.254'
+		host: '10.0.0.254',
+		verbose: false // true if you want debug logs
 });
 
-//session.verbose = true; // true if you want debug logs
 
 session.on('error', function(error) {
 		if (error) {
@@ -46,13 +45,13 @@ session.on('error', function(error) {
 session.connect(function() {
 		console.log('Logged in.');
 		console.log('Session level: %s', session.sessionLevel);		
-		session.exec('help', function(data){
-				netasqComm.dumpServerdObject(data.nws.serverd);
-				session.exec('quit', function(data){
-						netasqComm.dumpServerdObject(data.nws.serverd);
+		session.exec('help', function(response){
+				response.dumpServerdData();
+				session.exec('quit', function(response){
+						response.dumpServerdData();
 				})
 		})
-});                                        
+});                                     
 		
 ```
 
@@ -159,7 +158,7 @@ session.connect(function() {
 * @param {object} serverd: part of returned data
 * @param [{object}] ws: Writable Stream. Optionnal. Default to process.stdout
 * @see Session.exec
-* @see test/netasq-comm-*-format.js
+* @see test/netasqcomm-*-format.js
 * @example
 * session.exec('help', function(data){
 * 		netasqComm.dumpServerdObject(data.nws.serverd); // This will dump data to stdout
@@ -242,4 +241,4 @@ Just run test/run_test.js
 
 
 ## License
-node-netasq-comm is licensed under the MIT license.
+node-netasqcomm is licensed under the MIT license.

@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 
 var
 assert = require('assert'),
-netasqComm = require('../lib/netasq-comm'),
 xml2jsparser = require('../lib/xml2jsparser'),
+sdr = require('../lib/session_data_response'),
 parser,
 xml, 
 result,
 ss, 
+response,
 StrStream = function() {
 	this.text = '';
 };
@@ -115,7 +116,10 @@ parser.ondone = function (data) {
 		'User=admin Address=192.168.0.3 Level=modify,mon_write,base,contentfilter,log,filter,vpn,log_read,pki,object,user,admin,network,route,maintenance,asq,pvm,vpn_read,filter_read,globalobject,globalfilter SessionID=9 SessionLevel=modify,base,contentfilter,log,filter,vpn,log_read,pki,object,user,admin,network,route,maintenance,asq,pvm,vpn_read,filter_read,globalobject,globalfilter\n',
 		'code="00a00100" msg="Ok"\n'
 	].join('');
-	netasqComm.dumpServerdObject(data.nws.serverd, ss);
+	response = sdr.create({
+			data: data
+	});
+	response.dumpServerdData(ss);
 	assert.equal(ss.text, result, 'section_line format, one result render');	
 };
 parser.write(xml);

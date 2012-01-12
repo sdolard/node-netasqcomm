@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 
 var
 assert = require('assert'),
-netasqComm = require('../lib/netasq-comm'),
 xml2jsparser = require('../lib/xml2jsparser'),
+sdr = require('../lib/session_data_response'),
 parser,
 xml, 
 result,
 ss, 
+response,
 StrStream = function() {
 	this.text = '';
 };
@@ -104,7 +105,10 @@ parser.ondone = function (data) {
 		'position=5; ruleid=5: block from any to any # Block all\n',
 		'code="00a00100" msg="Ok"\n'
 	].join('');
-	netasqComm.dumpServerdObject(data.nws.serverd, ss);
+	response = sdr.create({
+		data: data
+	});
+	response.dumpServerdData(ss);
 	assert.equal(ss.text, result, 'list format render');
 };
 parser.write(xml);

@@ -1,4 +1,4 @@
-//#!/usr/bin/env node
+#!/usr/bin/env node
 /*
 Copyright © 2011 by Sebastien Dolard (sdolard@gmail.com)
 
@@ -29,14 +29,14 @@ util = require('util'),
 https = require('https'),
 prompt = require('prompt'),
 fs = require('fs'),
-netasqComm = require('../lib/netasq-comm'),
+netasqComm = require('../lib/netasqcomm'),
 getopt = require('posix-getopt'), // contrib
 optParser, opt, promptArray = [],
 
 /**
 * Session
 */
-session = new netasqComm.createSession();
+session = netasqComm.createSession();
 session.on('error', function(error) {
 		if (error) {
 			console.log('Session error (%s): %s', error.code, error.message);	
@@ -186,13 +186,13 @@ function downloadFile(session, fileName, fileWs, size) {
 *   - data to display
 *   - file upload/download
 */
-function manageResponse(data) {
+function manageResponse(response) {
 	var serverd, fileSize, fileCRC, fileName, fileWs;
 	
-	switch (parseInt(session.getObjectValue('nws.code', data),10)) {
+	switch (parseInt(response.getValue('nws.code'),10)) {
 	case netasqComm.NWS_ERROR_CODE.OK: 
-		serverd = session.getObjectValue('nws.serverd', data);
-		netasqComm.dumpServerdObject(serverd);
+		serverd = response.getValue('nws.serverd');
+		response.dumpServerdData();
 		
 		switch(parseInt(serverd.ret, 10)) {
 			// Success: serverd is waiting for data
@@ -201,7 +201,7 @@ function manageResponse(data) {
 					{
 						message: 'File to upload',    
 						name: 'file'/*, 
-						default: '/Users/sebastiend/Dev/perso/node/node-netasq-comm/download_config-backup-list=object_V50XXA0H0000003'  */         
+						default: '/Users/sebastiend/Dev/perso/node/node-netasqcomm/download_config-backup-list=object_V50XXA0H0000003'  */         
 					}
 			], function (err, result) {
 				if (err) {
@@ -232,10 +232,10 @@ function manageResponse(data) {
 			fileCRC = ''; 
 			fileName = '';
 			
-			if (netasqComm.dataFollow(data)) {
-				fileSize = data.nws.serverd.data.size;
-				fileCRC = data.nws.serverd.data.crc;
-				fileName = 'download_' + data.nws.id.replace(/\s/g, '-') + '_' + session.fw.serial;
+			if (response.dataFollow()) {
+				fileSize = response.getValue('nws.serverd.data.size');
+				fileCRC = response.getValue('nws.serverd.data.crc');
+				fileName = 'download_' + response.getValue('nws.id').replace(/\s/g, '-') + '_' + session.fw.serial;
 				
 				// We delete file if already exists
 				fs.stat(fileName, function(err, stats) {
@@ -279,11 +279,11 @@ function manageResponse(data) {
 		
 	case netasqComm.NWS_ERROR_CODE.INVALID_SESSION:
 	case netasqComm.NWS_ERROR_CODE.REQUEST_ERROR: 
-		console.log(session.getObjectValue('nws.msg', data));
+		console.log(response.getValue('nws.msg'));
 		break;
 		
 	default:
-		console.log(session.getObjectValue('nws.msg', data));
+		console.log(response.getValue('nws.msg'));
 		promptCli();
 	}
 }

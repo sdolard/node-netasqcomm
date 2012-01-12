@@ -1,5 +1,5 @@
 {
-  "name": "netasq-comm",
+  "name": "netasqcomm",
   "description": "A comm library and a CLI to connect to NETASQ security appliances",
   "version": "0.1.2",
   "author": "Sebastien Dolard <sdolard@gmail.com>",
@@ -14,9 +14,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sdolard/node-netasq-comm.git"
+    "url": "git://github.com/sdolard/node-netasqcomm.git"
   },
-  "main": "lib/netasq-comm",
+  "main": "lib/netasqcomm",
   "license": "MIT",
   "scripts": {
     "test": "node test/run_test.js"
@@ -30,14 +30,14 @@
     "node": ">= 0.4.0"
   },
   "bugs": {
-    "url": "https://github.com/sdolard/node-netasq-comm/issues"
+    "url": "https://github.com/sdolard/node-netasqcomm/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://raw.github.com/sdolard/node-netasq-comm/master/LICENSE"
+      "url": "https://raw.github.com/sdolard/node-netasqcomm/master/LICENSE"
     }
   ],
   "devDependencies": {},
-  "homepage": "http://github.com/sdolard/node-netasq-comm/"
+  "homepage": "http://github.com/sdolard/node-netasqcomm/"
 }
