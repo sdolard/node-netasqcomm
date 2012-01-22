@@ -328,7 +328,6 @@ function connect() {
 	session.connect(function() {
 			session.exec('system property', function(response){
 					console.log('Logged in firewall %s', session.fw.serial);
-					debugger;
 					console.log('Model: %s; Version: %s', 
 						response.serverdData().Result.Model,
 						response.serverdData().Result.Version);
