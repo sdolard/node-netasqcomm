@@ -126,6 +126,12 @@ parser.ondone = function (data) {
 	});
 	response.dumpServerdData(ss);
 	assert.equal(ss.text, result, 'Raw format render');
+	
+	
+	
+	serverdData = { rawData: 'AUTH       : User authentication\nCHPWD      : Return if it\'s necessary to update password or not\nCONFIG     : Firewall configuration functions\nGLOBALADMIN : Global administration\nHA         : HA functions\nHELP       : Display available commands\nLIST       : Display the list of connected users, show user rights (Level) and rights for current session (SessionLevel).\nLOG        : Log related functions\nEverywhere a timezone is needed, if not specified the command is treated with firewall timezone setting\nMODIFY     : Get / loose the modify or the mon_write right\nMONITOR    : Monitor related functions\nNOP        : Do nothing but avoid disconnection from server.\nPKI        : show or update the pki\nQUIT       : Log off\nSYSTEM     : System commands\nUSER       : User related functions\nVERSION    : Display server version\n' };
+	jsResponse = response.serverdData();
+	assert.deepEqual(jsResponse, serverdData, 'serverdData failed');
 };
 parser.write(xml);
 parser.close();

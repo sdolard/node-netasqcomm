@@ -24,11 +24,14 @@ var
 assert = require('assert'),
 xml2jsparser = require('../lib/xml2jsparser'),
 sdr = require('../lib/session_data_response'),
+vm = require('vm'),
 parser,
 xml, 
 result,
-ss, 
+ss,
 response,
+serverdData,
+jsResponse,
 StrStream = function() {
 	this.text = '';
 };
@@ -93,7 +96,7 @@ parser.ondone = function (data) {
 	};
 	assert.deepEqual(data, result, 'list format');
 	
-	// Render test
+	// ini mode
 	ss = new StrStream(); 
 	result = [
 		'code="00a01000" msg="Début"\n', 
@@ -108,8 +111,23 @@ parser.ondone = function (data) {
 	response = sdr.create({
 		data: data
 	});
-	response.dumpServerdData(ss);
+	response.dumpServerdData(ss, 'ini');
 	assert.equal(ss.text, result, 'list format render');
+	
+	
+	// serverdData
+	serverdData = {
+		Filter: [ 
+			'position=1; ruleid=1: pass log from any to firewall_all port firewall_srv|https # Admin from everywhere',
+			'position=2; ruleid=2: pass from Network_internals to Network_internals # réseau interne (cf switch)',
+			'position=3; ruleid=3: off decrypt inspection ips sslfiltering:0 from Network_internals to internet',
+			'position=4; ruleid=4: pass inspection ips mailfiltering:0,urlfiltering:0,ftpfiltering,antispam,antivirus log from Network_internals to internet',
+			'position=5; ruleid=5: block from any to any # Block all' 
+		] 
+	};
+	jsResponse = response.serverdData();
+	assert.deepEqual(jsResponse, serverdData, 'serverdData failed');
+	
 };
 parser.write(xml);
 parser.close();

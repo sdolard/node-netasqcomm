@@ -251,6 +251,42 @@ parser.ondone = function (data) {
 	});
 	response.dumpServerdData(ss);
 	assert.equal(ss.text, result, 'section format render');
+	
+	
+	// json mode
+	serverdData = {
+		Result: { 
+			Type: 'Firewall',
+			Model: 'U70-A',
+			Version: '9.0.0',
+			ASQVersion: '5.0.0',
+			SerialNumber: 'U70XXA9M1000019',
+			MTUmax: '8996',
+			Bridge: '4',
+			Ethernet: '6',
+			VLAN: '32',
+			WIFI: '0',
+			Dialup: '4',
+			PPTP: '16',
+			Serial: '0',
+			Loopback: '7',
+			Watchdog: '0',
+			Led: '0',
+			Clone: '1',
+			HADialup: '1',
+			Raid: '0',
+			Antiviral: '1',
+			HighAvail: '1',
+			Usb: '1',
+			SwitchPort: '6',
+			CryptoCard: '0',
+			NTP: '1',
+			PostprocMaxSize: '11287'
+		}
+	};
+	jsResponse = response.serverdData();
+	assert.deepEqual(jsResponse, serverdData, 'serverdData failed');
+	
 };
 parser.write(xml);
 parser.close();

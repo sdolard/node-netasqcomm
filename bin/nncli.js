@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 /*
-Copyright © 2011 by Sebastien Dolard (sdolard@gmail.com)
+Copyright © 2012 by Sebastien Dolard (sdolard@gmail.com)
 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,7 +39,10 @@ optParser, opt, promptArray = [],
 session = netasqComm.createSession();
 session.on('error', function(error) {
 		if (error) {
-			console.log('Session error (%s): %s', error.code, error.message);	
+			console.error('Session error (%s): %s', error.code, error.message);	
+			if (session.verbose && typeof error.stack === 'string') {
+				console.log(error.stack);
+			}
 			process.exit(1);
 			return;
 		}
@@ -57,7 +60,7 @@ session.on('disconnected', function() {
 * Uncaught exception 
 */
 process.on('uncaughtException', function (exception) {
-		console.error('Process uncaught exception: ', exception.message);
+		console.error('Process uncaught exception (%s): %s', exception.code, exception.message);	
 		if (session.verbose && typeof exception.stack === 'string') {
 			console.log(exception.stack);
 		}
@@ -159,7 +162,7 @@ function downloadFile(session, fileName, fileWs, size) {
 			console.log('fileWs error', exception);
 	});
 	/*fileWs.on('close', function () {
-			//		console.log('fileWs close');
+	//		console.log('fileWs close');
 	});*/
 	console.log('Download pending...');
 	session.download(fileWs, fileName, function(){
@@ -323,12 +326,22 @@ if (session.pwd === '') {
 function connect() {
 	console.log('Connecting to %s:%s...', session.host, session.port);
 	session.connect(function() {
-			console.log('Logged in.');
-			console.log('Session level: %s', session.sessionLevel);		
-			if (session.fw.needReboot) {
-				console.log('* This appliance require to reboot. *');	
-			}
-			promptCli();
+			session.exec('system property', function(response){
+					console.log('Logged in firewall %s', session.fw.serial);
+					debugger;
+					console.log('Model: %s; Version: %s', 
+						response.serverdData().Result.Model,
+						response.serverdData().Result.Version);
+					session.exec('system date', function(response){
+							console.log('Date Time: %s', 
+								response.serverdData().Result.Date);
+							console.log('Session level: %s', session.sessionLevel);		
+							if (session.fw.needReboot) {
+								console.log('* This appliance require to reboot. *');	
+							}
+							promptCli();
+					});
+			});
 	});
 }
 

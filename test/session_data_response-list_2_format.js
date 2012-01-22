@@ -276,6 +276,64 @@ parser.ondone = function (data) {
 	});
 	response.dumpServerdData(ss);
 	assert.equal(ss.text, result, 'list format 2 render');
+	
+	
+	// serverdData
+	serverdData = {
+		network: [
+			"/usr/Firewall/ConfigFiles/network",
+			"/usr/Firewall/ConfigFiles/object",
+			"/usr/Firewall/ConfigFiles/Global/object",
+			"/usr/Firewall/ConfigFiles/pptpserver",
+		"/usr/Firewall/ConfigFiles/route"],
+		ha: [
+		"/usr/Firewall/ConfigFiles/HA/highavailability"],
+		vpn: [
+			"/usr/Firewall/ConfigFiles/VPN/00",
+			"/usr/Firewall/ConfigFiles/VPN/01",
+			"/usr/Firewall/ConfigFiles/VPN/02",
+			"/usr/Firewall/ConfigFiles/VPN/03",
+			"/usr/Firewall/ConfigFiles/VPN/04",
+			"/usr/Firewall/ConfigFiles/VPN/05",
+			"/usr/Firewall/ConfigFiles/VPN/06",
+			"/usr/Firewall/ConfigFiles/VPN/07",
+			"/usr/Firewall/ConfigFiles/VPN/08",
+			"/usr/Firewall/ConfigFiles/VPN/09",
+			"/usr/Firewall/ConfigFiles/VPN/10",
+			"/usr/Firewall/ConfigFiles/VPN/ca",
+			"/usr/Firewall/ConfigFiles/VPN/peer",
+			"/usr/Firewall/ConfigFiles/VPN/ph1profile",
+			"/usr/Firewall/ConfigFiles/VPN/ph2profile",
+			"/usr/Firewall/ConfigFiles/VPN/psk",
+		"/usr/Firewall/ConfigFiles/VPN/slotinfo"],
+		ldap: [
+		"/usr/Firewall/ConfigFiles/ldap"],
+		auth: [
+			"/usr/Firewall/ConfigFiles/auth",
+		"/usr/Firewall/ConfigFiles/krb5.keytab"],
+		xvpn: [
+			"/usr/Firewall/ConfigFiles/XVPN/httpserver",
+			"/usr/Firewall/ConfigFiles/XVPN/profile",
+			"/usr/Firewall/ConfigFiles/XVPN/xserver",
+		"/usr/Firewall/ConfigFiles/XVPN/xvpn"],
+		pki: [
+			"/usr/Firewall/ConfigFiles/Certificates/SSL proxy default authority/CA.cert.pem",
+			"/usr/Firewall/ConfigFiles/Certificates/SSL proxy default authority/CA.conf",
+			"/usr/Firewall/ConfigFiles/Certificates/SSL proxy default authority/CA.db",
+			"/usr/Firewall/ConfigFiles/Certificates/SSL proxy default authority/CA.pkey.pem",
+			"/usr/Firewall/ConfigFiles/Certificates/SSL proxy default authority/CA.revokation",
+			"/usr/Firewall/ConfigFiles/Certificates/SSL proxy default authority/CA.serial",
+			"/usr/Firewall/ConfigFiles/Certificates/pending.req",
+			"/usr/Firewall/ConfigFiles/Certificates/pki.conf",
+		"/usr/Firewall/ConfigFiles/Certificates/selfsigned.db"],
+		ntp: [
+		"/usr/Firewall/ConfigFiles/ntp"],
+		snmp: [
+		"/usr/Firewall/ConfigFiles/snmp"]
+	};
+	jsResponse = response.serverdData();
+	assert.deepEqual(jsResponse, serverdData, 'serverdData failed');
+	
 };
 parser.write(xml);
 parser.close();

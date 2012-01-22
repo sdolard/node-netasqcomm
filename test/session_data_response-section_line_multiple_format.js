@@ -158,6 +158,27 @@ parser.ondone = function (data) {
 	});
 	response.dumpServerdData(ss);
 	assert.equal(ss.text, result, 'section_line format, multiple results render');	
+	
+	
+	// json mode
+	serverdData = {
+		Result: [
+			{
+				User: "admin", 
+				Address: "192.168.0.1", 
+				Level: "modify,mon_write,base,contentfilter,log,filter,vpn,log_read,pki,object,user,admin,network,route,maintenance,asq,pvm,vpn_read,filter_read,globalobject,globalfilter", 
+				SessionID: "1", 
+				SessionLevel: "base,contentfilter,log,filter,vpn,log_read,pki,object,user,admin,network,route,maintenance,asq,pvm,vpn_read,filter_read,globalobject,globalfilter"
+			},{
+				User: "log", 
+				Address: "10.0.0.1", 
+				Level: "mon_write,base,contentfilter,log,filter,vpn,log_read,pki,object,user,admin,network,route,maintenance,asq,pvm,vpn_read,filter_read,globalobject,globalfilter", 
+				SessionID: "2", 
+				SessionLevel: "base,contentfilter,log,filter,vpn,log_read,pki,object,user,admin,network,route,maintenance,asq,pvm,vpn_read,filter_read,globalobject,globalfilter"
+		}]
+	};
+	jsResponse = response.serverdData();
+	assert.deepEqual(jsResponse, serverdData, 'serverdData failed');
 };
 parser.write(xml);
 parser.close();
