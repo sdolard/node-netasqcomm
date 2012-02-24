@@ -140,7 +140,7 @@ function promptCli() {
 			{
 				message: session.login + '@' + session.host,
 				name: 'cmd', 
-				default: 'help'
+				'default': 'help'
 			}
 	], function(error, value){
 		if (error) {
@@ -302,7 +302,7 @@ if (session.host === '') {
 	promptArray.push({
 			message: 'You want to connect to',    
 			name: 'host',                   
-			default: '10.0.0.254'                      
+			'default': '10.0.0.254'                      
 	});
 }
 
@@ -310,7 +310,7 @@ if (session.login === '') {
 	promptArray.push({
 			message: 'Login',     
 			name: 'login',                   
-			default: 'admin'                
+			'default': 'admin'                
 	});
 }
 
@@ -319,7 +319,7 @@ if (session.pwd === '') {
 			message: 'Password',    
 			name: 'pwd',                          
 			hidden: true,                   
-			default: 'admin'
+			'default': 'admin'
 	});
 }
 
