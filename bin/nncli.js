@@ -36,7 +36,9 @@ optParser, opt, promptArray = [],
 /**
 * Session
 */
-session = netasqComm.createSession();
+session = netasqComm.createSession({
+		appName: 'nn2cli' 
+});
 session.on('error', function(error) {
 		if (error) {
 			console.error('Session error (%s): %s', error.code, error.message);	
