@@ -16,13 +16,17 @@ session.on('error', function(error) {
 		process.exit(1);
 });
 
-session.connect(function() {
+
+session.on('connected', function() {
 		console.log('Logged in.');
 		console.log('Session level: %s', session.sessionLevel);		
 		session.exec('help', function(response){
 				response.dumpServerdData();
 				session.exec('quit', function(response){
 						response.dumpServerdData();
-				})
-		})
+				});
+		});
 });
+
+session.connect();
+

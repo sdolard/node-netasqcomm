@@ -1,4 +1,5 @@
-# node-netasqcomm
+# node-netasqcomm [![Build Status](https://secure.travis-ci.org/sdolard/node-netasqcomm.png?branch=master)](http://travis-ci.org/sdolard/node-netasqcomm)
+
 
 This is a NETASQ security appliance comm library for node.js.
 It contains also a cli: nncli (NETASQ Node CLI)

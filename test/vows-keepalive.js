@@ -20,44 +20,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 */
 
-var
+var 
+// node
 assert = require('assert'),
-sdr = require('../lib/session_data_response').create(),
-EUNDEFPROP_count = 0,
-ENODATA_count = 0;
+EventEmitter = require('events').EventEmitter,
 
-// ENODATA event
-try { 
-	sdr.getValue();
-} catch(e) {
-	if (e.code === 'ENODATA') {
-		ENODATA_count++; 
-	}
-}
+// contrib 
+vows = require('vows'),
 
-// empty data
-sdr.data = {};
-assert.strictEqual(sdr.getValue(), sdr.data);
+// lib
+keepAlive = require('../lib/keepalive');
 
 
-// EUNDEFPROP event
-try { 
-	sdr.getValue(' ');
-} catch(se) {
-	if (se.code === 'EUNDEFPROP') {
-		EUNDEFPROP_count++; 
-	}
-}
-
-
-sdr.data = {
-	bar: {
-		a: 'b'
-	}
-};
-assert.strictEqual(sdr.getValue('bar'), sdr.data.bar);
-assert.strictEqual(sdr.getValue('bar.a'), sdr.data.bar.a);
-
-// event
-assert.strictEqual(ENODATA_count, 1, "ENODATA_count");
-assert.strictEqual(EUNDEFPROP_count, 1, "EUNDEFPROP_count");
+exports.suite1 = vows.describe('KeepAlive class').addBatch({
+		'when creating a stopped KeepAlive instance': {
+			topic: function () { 
+				return keepAlive.create({
+						cb: function() {
+						},
+						delay: 1, 
+						start: false
+				});
+			},
+			
+			'keepalive is not running': function (topic) {
+				assert.ok(!topic.isRunning());
+			}
+		},
+		'when creating a running KeepAlive instance': {
+			topic: function () { 
+				var 
+				promise = new EventEmitter(),
+				ka = keepAlive.create({
+						cb: function() {
+							promise.emit('success', ka);
+						},
+						delay: 1, 
+						start: true
+				});
+				return promise;
+			},
+			'keepalive is running': function (ka) {
+				assert.ok(ka.isRunning());
+				ka.stop();
+				assert.ok(!ka.isRunning());
+			}
+		}
+});

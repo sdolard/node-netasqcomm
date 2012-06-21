@@ -1,4 +1,4 @@
-//#!/usr/bin/env node
+#!/usr/bin/env node
 /*
 Copyright © 2012 by Sebastien Dolard (sdolard@gmail.com)
 
