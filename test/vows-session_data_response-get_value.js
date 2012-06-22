@@ -1,5 +1,5 @@
 /*
-Copyright © 2011 by Sebastien Dolard (sdolard@gmail.com)
+Copyright Â© 2011 by Sebastien Dolard (sdolard@gmail.com)
 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
