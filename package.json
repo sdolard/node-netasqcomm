@@ -19,7 +19,7 @@
 	"main": "lib/netasqcomm",
 	"license": "MIT",
 	"scripts": {
-		"pretest": "jsrevival -o \"properties: false, maxlen: 0\" -R lib/ test/",
+		"pretest": "jsrevival -o \"properties: false, maxlen: 0\" -R lib/ test/ examples/",
 		"test": "vows test/vows-*.js --spec"
 	},
 	"dependencies": {
