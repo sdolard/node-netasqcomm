@@ -1,10 +1,14 @@
+/*
+Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
+*/
+
 var
 util = require('util'),
 session = require('../lib/netasqcomm').createSession({
 		login: 'admin',
 		pwd: 'simple1107',
 		//host: '10.0.0.254', 
-		host: '192.168.0.254',
+		host: 'sdolard.dyndns.org',
 		verbose: false // true if you want debug logs
 });
 

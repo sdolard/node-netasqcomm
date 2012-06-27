@@ -1,3 +1,7 @@
+/*
+Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
+*/
+
 var 
 // node
 assert = require('assert'),

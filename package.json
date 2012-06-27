@@ -17,7 +17,6 @@
 		"url": "git://github.com/sdolard/node-netasqcomm.git"
 	},
 	"main": "lib/netasqcomm",
-	"license": "MIT",
 	"scripts": {
 		"pretest": "jsrevival -o \"properties: false, maxlen: 0\" -R lib/ test/ examples/",
 		"test": "vows test/vows-*.js --spec"
@@ -35,12 +34,6 @@
 	"bugs": {
 		"url": "https://github.com/sdolard/node-netasqcomm/issues"
 	},
-	"licenses": [
-		{
-			"type": "MIT",
-			"url": "https://raw.github.com/sdolard/node-netasqcomm/master/LICENSE"
-		}
-	],
 	"devDependencies": {},
 	"homepage": "http://github.com/sdolard/node-netasqcomm/"
 }

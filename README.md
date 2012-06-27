@@ -180,7 +180,6 @@ session.connect(function() {
 * 	}
 * 	getObjectValue('foo.bar', foo) returns 'value'
 * 	getObjectValue('help', foo) throw an error
-* @see test/get-object-value.js
 */
 ```
 
@@ -238,8 +237,4 @@ session.connect(function() {
 
 
 ## Test
-Just run test/run_test.js
-
-
-## License
-node-netasqcomm is licensed under the MIT license.
+Just run npm test
