@@ -22,7 +22,7 @@ session.on('error', function(error) {
 });
 
 
-session.on('connect', function() {
+session.on('connect', function(err) {
 		console.log('Logged in.');
 		var 
 		now = new Date(),

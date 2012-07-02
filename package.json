@@ -1,7 +1,7 @@
 {
 	"name": "netasqcomm",
 	"description": "A comm library and a CLI to connect to NETASQ security appliances",
-	"version": "0.1.3",
+	"version": "0.2.0",
 	"author": "Sebastien Dolard <sdolard@gmail.com>",
 	"email": "sdolard@gmail.com",
 	"keywords": [
@@ -11,10 +11,6 @@
 	],
 	"bin": {
 		"nncli": "./bin/nncli.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/sdolard/node-netasqcomm.git"
 	},
 	"main": "lib/netasqcomm",
 	"scripts": {
@@ -31,10 +27,5 @@
 	},
 	"engines": {
 		"node": ">= 0.6.0"
-	},
-	"bugs": {
-		"url": "https://github.com/sdolard/node-netasqcomm/issues"
-	},
-	"devDependencies": {},
-	"homepage": "http://github.com/sdolard/node-netasqcomm/"
+	}
 }
