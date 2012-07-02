@@ -6,9 +6,8 @@ var
 util = require('util'),
 session = require('../lib/netasqcomm').createSession({
 		login: 'admin',
-		pwd: 'simple1107',
-		//host: '10.0.0.254', 
-		host: 'sdolard.dyndns.org',
+		pwd: 'adminadmin',
+		host: '10.0.0.254', 
 		verbose: false // true if you want debug logs
 });
 
@@ -23,7 +22,7 @@ session.on('error', function(error) {
 });
 
 
-session.on('connected', function() {
+session.on('connect', function() {
 		console.log('Logged in.');
 		var 
 		now = new Date(),

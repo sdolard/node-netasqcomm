@@ -26,10 +26,11 @@
 		"prompt": "0.1.x",
 		"posix-getopt": "0.0.x",
 		"vows": "0.6.x",
-		"jsrevival": "0.0.x"
+		"jsrevival": "0.0.x",
+		"colors": "0.6.x"
 	},
 	"engines": {
-		"node": ">= 0.4.0"
+		"node": ">= 0.6.0"
 	},
 	"bugs": {
 		"url": "https://github.com/sdolard/node-netasqcomm/issues"

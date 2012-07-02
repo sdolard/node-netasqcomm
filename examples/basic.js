@@ -21,7 +21,7 @@ session.on('error', function(error) {
 });
 
 
-session.on('connected', function() {
+session.on('connect', function(err) {
 		console.log('Logged in.');
 		console.log('Session level: %s', session.sessionLevel);		
 		session.exec('help', function(response){
