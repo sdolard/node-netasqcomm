@@ -6,23 +6,21 @@ var
 util = require('util'),
 session = require('../lib/netasqcomm').createSession({
 		login: 'admin',
-		pwd: 'adminadmin',
-		host: '10.0.0.254', 
+		/*pwd: 'adminadmin',
+		host: '10.0.0.254',*/
+		pwd: 'simple1107',
+		host: 'sdolard.dyndns.org',
 		verbose: false // true if you want debug logs
 });
 
+console.log(util.format('Connecting to %s...', session.host));
 
-session.on('error', function(error) {
-		if (error) {
-			console.log('Session error (%s): %s', error.code, error.message);	
-		} else {
-			console.log('Session error occured (no details)');
+session.connect(function(err) {
+		if (err) {
+			console.log(err.message);
+			process.exit(1);
 		}
-		process.exit(1);
-});
-
-
-session.on('connect', function(err) {
+		
 		console.log('Logged in.');
 		var 
 		now = new Date(),
@@ -38,11 +36,15 @@ session.on('connect', function(err) {
 				} else {
 					console.log('Backup downloaded: %s (size: %s, crc: %s)', fileName, size, crc);
 				}
-				session.exec('quit', function(response){
-						response.dumpServerdData();
+				
+				console.log('> QUIT');
+				session.exec('quit', function(err, response){
+						if (err) {
+							console.log(err.message);
+						} else {
+							response.dumpServerdData();
+						}
 				});
 		});
 });
-
-session.connect();
 

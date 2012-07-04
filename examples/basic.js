@@ -5,9 +5,6 @@ Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
 var
 util = require('util'),
 
-//profiler = require('v8-profiler'),
-
-
 session = require('../lib/netasqcomm').createSession({
 		login: 'admin',
 		pwd: 'adminadmin',
@@ -17,16 +14,10 @@ session = require('../lib/netasqcomm').createSession({
 		verbose: false // true if you want debug logs
 });
 
-//console.log(profiler.takeSnapshot('foo'));
-//profiler.startProfiling('bar');                   //begin cpu profiling
-
 console.log(util.format('Connecting to %s...', session.host));
 session.connect(function(err) {
 		if (err) {
 			console.log(err.message);
-	//		console.log(util.inspect(profiler.stopProfiling('bar'), true, null));
-			
-	//		console.log(profiler.takeSnapshot('baz'));
 			process.exit(1);
 		}
 		
