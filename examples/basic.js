@@ -9,8 +9,6 @@ session = require('../lib/netasqcomm').createSession({
 		login: 'admin',
 		pwd: 'adminadmin',
 		host: '10.0.0.254',
-		/*pwd: 'simple1107',
-		host: '192.168.0.254',*/
 		verbose: false // true if you want debug logs
 });
 

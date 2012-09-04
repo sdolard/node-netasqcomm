@@ -6,10 +6,8 @@ var
 util = require('util'),
 session = require('../lib/netasqcomm').createSession({
 		login: 'admin',
-		/*pwd: 'adminadmin',
-		host: '10.0.0.254',*/
-		pwd: 'simple1107',
-		host: 'sdolard.dyndns.org',
+		pwd: 'adminadmin',
+		host: '10.0.0.254',
 		verbose: false // true if you want debug logs
 });
 
