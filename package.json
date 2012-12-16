@@ -22,7 +22,7 @@
 		"prompt": "0.1.x",
 		"posix-getopt": "0.0.x",
 		"vows": "0.6.x",
-		"jsrevival": "0.0.x",
+		"jsrevival": "0.1.x",
 		"colors": "0.6.x"
 	},
 	"engines": {

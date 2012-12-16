@@ -51,7 +51,7 @@ exports.suite1 = vows.describe('Session class').addBatch({
 				assert.isFalse(session._authenticated);
 			},			
 			'id is empty': function (session) {
-				assert.strictEqual(session.id, '');
+				assert.strictEqual(session.apiSessionId, '');
 			},			
 			'cookies equal {}': function (session) {
 				assert.deepEqual(session.cookies, {});
