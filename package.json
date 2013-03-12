@@ -10,7 +10,7 @@
 		"cli"
 	],
 	"bin": {
-		"nncli": "./bin/nncli.js"
+		"nncli": "./bin/nncli"
 	},
 	"main": "lib/netasqcomm",
 	"scripts": {
