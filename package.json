@@ -14,7 +14,7 @@
 	},
 	"main": "lib/netasqcomm",
 	"scripts": {
-		"pretest": "jsrevival -o \"properties: false, maxlen: 0\" -R lib/ test/ examples/",
+		"pretest": "jsrevival -r cli-hide-valid -o \"properties: false, maxlen: 0\" -R lib/ test/ examples/",
 		"test": "vows test/vows-*.js --spec"
 	},
 	"dependencies": {
