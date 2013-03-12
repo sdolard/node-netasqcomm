@@ -18,12 +18,15 @@
 		"test": "vows test/vows-*.js --spec"
 	},
 	"dependencies": {
-		"sax": "0.4.x",
+		"sax": "0.5.x",
 		"prompt": "0.1.x",
 		"posix-getopt": "0.0.x",
+		"colors": "0.6.x",
+		"mkdirp": "0.3.x"
+	},
+	"devDependencies": {
 		"vows": "0.6.x",
-		"jsrevival": "0.1.x",
-		"colors": "0.6.x"
+		"jsrevival": "0.1.x"
 	},
 	"engines": {
 		"node": ">= 0.6.0"
