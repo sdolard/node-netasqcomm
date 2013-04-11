@@ -22,7 +22,7 @@ StrStream = (function () {
 }());
 
 describe ('Firewall section format',function(){
-	it('should', function(done){
+	it('should parse xml', function(done){
 		var
 		parser = xml2jsparser.create(),
 		response,
@@ -271,23 +271,3 @@ describe ('Firewall section format',function(){
 		parser.close();
 	});
 });
-
-/*
-exports.suite1 =  vows.describe('Firewall section format').addBatch({
-		'when parsing xml section format': {
-			topic: function () {
-
-			},
-			'it succeed': function (topic) {
-
-			},
-			'Render test succeed': function (topic) {
-
-			},
-			'serverData() format is valid': function (topic) {
-
-			}
-		}
-});
-*/
-
