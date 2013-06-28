@@ -22,7 +22,8 @@
 		"prompt": "0.1.x",
 		"posix-getopt": "0.0.x",
 		"colors": "0.6.x",
-		"mkdirp": "0.3.x"
+		"mkdirp": "0.3.x",
+		"crashreporter": "0.0.x"
 	},
 	"devDependencies": {
 		"mocha": "1.9.x",
