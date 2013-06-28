@@ -12,7 +12,8 @@ keepAlive = require('../lib/keepalive');
 describe('KeepAlive class', function(){
 	it('should not run', function(){
 		var ka = keepAlive.create({
-			cb: function() {
+			cb: function() { 
+				return;
 			},
 			delay: 1,
 			start: false

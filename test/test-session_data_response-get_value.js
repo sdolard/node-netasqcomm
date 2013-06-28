@@ -12,7 +12,7 @@ describe ('SessionDataResponse class', function(){
 	// order is important !
 	it ('should throw when calling getValue with no params', function() {
 		try {
-			var v = sdr.getValue();
+			sdr.getValue();
 		} catch (err) {
 			assert.strictEqual(err.code, 'ENODATA');
 			assert.strictEqual(err.message, 'data property is undefined');
@@ -27,7 +27,7 @@ describe ('SessionDataResponse class', function(){
 
 	it ('should throw when calling getValue with an empty string', function() {
 		try {
-			var v = sdr.getValue(' ');
+			sdr.getValue(' ');
 		} catch (err) {
 			assert.strictEqual(err.code, 'EUNDEFPROP');
 			assert.strictEqual(err.message, '" " property is not defined in "{}"');

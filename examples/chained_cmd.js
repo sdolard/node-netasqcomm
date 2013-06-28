@@ -5,11 +5,9 @@ Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
 var
 util = require('util'),
 session = require('../lib/netasqcomm').createSession({
-		//host: '10.0.0.254',
-		host: '10.2.15.254',
+		host: '10.0.0.254',
 		login: 'admin',
-		pwd: 'keepsafe',
-		//pwd: 'adminamdin',
+		pwd: 'adminamdin',
 		verbose: false // true if you want debug logs
 });
 

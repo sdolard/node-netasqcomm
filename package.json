@@ -14,7 +14,7 @@
 	},
 	"main": "lib/netasqcomm",
 	"scripts": {
-		"pretest": "jsrevival -r cli-hide-valid -o \"properties: false, maxlen: 0\" -R lib/ test/ examples/",
+		"pretest": "jsrevival -r cli-hide-valid -p \"describe,it\" -o \"properties: false, maxlen: 0\" -R lib/ test/ examples/",
 		"test": "mocha"
 	},
 	"dependencies": {
@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"mocha": "1.9.x",
-		"jsrevival": "0.1.x"
+		"jsrevival": "0.2.x"
 	},
 	"engines": {
 		"node": ">= 0.10.0"

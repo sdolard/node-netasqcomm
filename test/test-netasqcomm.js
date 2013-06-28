@@ -35,7 +35,7 @@ describe('Session class', function(){
 
 	it ('should throw when creating a Session class with invalid requiredLevel', function(){
 		try{
-			var session = netasqcomm.createSession({
+			netasqcomm.createSession({
 				requiredLevel: 'bar'
 			});
 		} catch (err){
