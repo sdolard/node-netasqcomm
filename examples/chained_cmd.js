@@ -5,9 +5,9 @@ Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
 var
 util = require('util'),
 session = require('../lib/netasqcomm').createSession({
-		host: '10.0.0.254',
 		login: 'admin',
-		pwd: 'adminamdin',
+		pwd: 'adminadmin',
+		host: '10.0.0.254',
 		verbose: false // true if you want debug logs
 });
 
@@ -18,14 +18,14 @@ session.on('connect', function(err) {
 		process.exit(1);
 	}
 
-	var 
+	var
 	now = new Date(),
-	fileName = util.format('%s_backup_%s.na', 
+	fileName = util.format(__dirname + '/dl/%s_backup_%s.na',
 		session.host,
 		now.toISOString());
 
 	console.log('Logged in.');
-	console.log('Session level: %s', session.sessionLevel);		
+	console.log('Session level: %s', session.sessionLevel);
 
 	session.exec('list', function(err, response){
 			if (err) {
@@ -34,14 +34,17 @@ session.on('connect', function(err) {
 				response.dumpServerdData();
 			}
 	});
+
+
 	session.exec('help', function(err, response){
 			if (err) {
 				console.log(err.message);
 			} else {
 				response.dumpServerdData();
-			}			
+			}
 	});
-	
+
+
 	session.downloadBackup(fileName, 'all', function(err, size, crc){
 			if (err) {
 				console.log(err);
@@ -55,7 +58,7 @@ session.on('connect', function(err) {
 				console.log(err.message);
 			} else {
 				response.dumpServerdData();
-			}			
+			}
 	});
 
 	session.upload(fileName, function(err, response){
@@ -73,6 +76,7 @@ session.on('connect', function(err) {
 			} else {
 				response.dumpServerdData();
 			}
+			console.log('Closing. Please wait...');
 	});
 
 	// should failed
@@ -81,7 +85,7 @@ session.on('connect', function(err) {
 				console.log(err.message);
 			} else {
 				response.dumpServerdData();
-			}			
+			}
 	});
 	// should failed
 	session.exec('quit', function(err, response){

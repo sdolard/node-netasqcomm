@@ -14,7 +14,7 @@
 	},
 	"main": "lib/netasqcomm",
 	"scripts": {
-		"pretest": "jsrevival -r cli-hide-valid -p \"describe,it\" -o \"properties: false, maxlen: 0\" -R lib/ test/ examples/",
+		"pretest": "jsrevival -r cli-hide-valid -p \"describe,it\" -o \"ass: false, bitwise: false, browser: false, closure: false, continue: true, couch: false, debug: false, devel: false, eqeq: false, es5: true, evil: false, forin: false, indent: 10, maxerr: 1000, maxlen: 1024, newcap: false, node: true, nomen: true, passfail: false, plusplus: true, properties: false, regexp: false, rhino: false, unparam: false, sloppy: true, stupid: false, sub: false, todo: true, vars: false, white: true\" -R lib/ test/ examples/",
 		"test": "mocha"
 	},
 	"dependencies": {
